@@ -1,11 +1,13 @@
 import { Product, Review, PromoCode, CartItem } from '../types';
 
+export const CUSTOM_PRINT_FEE = 500; // KSh 500 for custom name & number back print
+
 export const STORE_CONFIG = {
-  name: "BRANDED 254",
-  subtitle: "Nairobi Streetwear & Custom Prints",
+  name: "NICKIE STORE",
+  subtitle: "Nairobi Football Kits & Custom Prints",
   location: "Nairobi, Kenya",
-  whatsappNumber: "2547110226322",
-  whatsappDisplay: "+254 711 022 6322",
+  whatsappNumber: "254110226322",
+  whatsappDisplay: "0110 226 322",
   email: "lusopio93@gmail.com",
   nairobiAreas: [
     "Nairobi CBD",
@@ -23,18 +25,322 @@ export const STORE_CONFIG = {
 
 export const INITIAL_PRODUCTS: Product[] = [
   {
+    id: 101,
+    name: "Chelsea 2023",
+    category: "season_26_27",
+    price: 1500,
+    originalPrice: 2000,
+    desc: "Official 2023 Season Chelsea Home Kit. Royal blue body with polo collar, central gold FIFA World Champions badge, embroidered yellow lion crest, side contour piping, and optional custom name & number printing (+ KSh 500).",
+    details: [
+      "2023 Season Chelsea Classic Edition with gold FIFA Club World Champions central badge",
+      "Embroidered yellow Chelsea lion crest & yellow Nike swoosh with side contour piping",
+      "Moisture-wicking breathable Dri-Fit micro-knit fabric",
+      "Custom Name & Number back print available for + KSh 500 (e.g. PALMER 20, CAICEDO 25, or custom name)",
+      "Price: KSh 1,500 (Plain) / KSh 2,000 (With Custom Back Print) • Same-day Nairobi rider dispatch via WhatsApp"
+    ],
+    colors: [
+      { name: "Chelsea Royal Blue", hex: "#034694" }
+    ],
+    sizes: ["S", "M", "L", "XL", "XXL"],
+    images: [
+      "/images/chelsea.jpeg",
+      "/images/chelsea_team.jpg",
+      "/images/chelsea_2627_back.jpg",
+      "/images/chelsea_2627_detail.jpg",
+      "/images/chelsea_2627_angle.jpg"
+    ],
+    image: "/images/chelsea.jpeg",
+    stock: 50,
+    featured: true,
+    isNewDrop: true,
+    rating: 5.0,
+    reviewsCount: 50,
+    tags: ["2023 Season", "Chelsea", "Chelsea 2023", "2023 Kit", "Classic Kit", "KSh 1500"],
+    allowsCustomPrint: true
+  },
+  {
+    id: 102,
+    name: "Man Utd",
+    category: "season_26_27",
+    price: 1500,
+    originalPrice: 2000,
+    desc: "Official 26/27 Season Manchester United Home Kit. Old Trafford scarlet red with precision Red Devils crest and optional custom printing (+ KSh 500).",
+    details: [
+      "26/27 Season Red Devils Edition",
+      "Precision heat-applied crest and athletic performance mesh",
+      "Custom name & number back print available for + KSh 500 (e.g. BRUNO 8, RASHFORD 10, or custom)",
+      "Price: KSh 1,500 (Plain) / KSh 2,000 (With Custom Print) • Same-day Nairobi rider delivery"
+    ],
+    colors: [
+      { name: "Man Utd Scarlet Red", hex: "#DA291C" }
+    ],
+    sizes: ["S", "M", "L", "XL", "XXL"],
+    images: [
+      "/images/manutd.jpeg",
+      "/images/manutd.jpg"
+    ],
+    image: "/images/manutd.jpeg",
+    stock: 50,
+    featured: true,
+    isNewDrop: true,
+    rating: 5.0,
+    reviewsCount: 56,
+    tags: ["26/27 Season", "Man Utd", "Manchester United", "KSh 1500"],
+    allowsCustomPrint: true
+  },
+  {
+    id: 103,
+    name: "Liverpool",
+    category: "season_26_27",
+    price: 1500,
+    originalPrice: 2000,
+    desc: "Official 26/27 Season Liverpool Home Kit. Anfield crimson red body with authentic Liverbird crest and optional custom printing (+ KSh 500).",
+    details: [
+      "26/27 Season The Reds Edition",
+      "Lightweight athletic jacquard knit with quick evaporation",
+      "Custom name & number back print available for + KSh 500 (e.g. SALAH 11 or personal)",
+      "Price: KSh 1,500 • Dispatched instantly in Nairobi"
+    ],
+    colors: [
+      { name: "Anfield Crimson Red", hex: "#C8102E" }
+    ],
+    sizes: ["S", "M", "L", "XL", "XXL"],
+    images: [
+      "/images/liverpool.jpeg",
+      "/images/liverpool.jpg"
+    ],
+    image: "/images/liverpool.jpeg",
+    stock: 40,
+    featured: true,
+    isNewDrop: true,
+    rating: 5.0,
+    reviewsCount: 48,
+    tags: ["26/27 Season", "Liverpool", "Premier League", "KSh 1500"],
+    allowsCustomPrint: true
+  },
+  {
+    id: 104,
+    name: "Real Madrid",
+    category: "season_26_27",
+    price: 1500,
+    originalPrice: 2000,
+    desc: "Official 26/27 Season Real Madrid Home Kit. Royal white with gold accents, regal Bernabéu crest, and optional custom player print (+ KSh 500).",
+    details: [
+      "26/27 Season Los Blancos Edition with squad match photo",
+      "Premium micro-perforated cooling panels and gold accents",
+      "Custom name & number print available for + KSh 500 (e.g. MBAPPÉ 9, VINICIUS 7, BELLINGHAM 5)",
+      "Price: KSh 1,500 (Plain) / KSh 2,000 (With Custom Print) • Nairobi instant dispatch"
+    ],
+    colors: [
+      { name: "Pure White / Gold", hex: "#FFFFFF" }
+    ],
+    sizes: ["S", "M", "L", "XL", "XXL"],
+    images: [
+      "/images/realmadrid.jpeg",
+      "/images/realmadrid_team.jpg",
+      "/images/realmadrid.jpg"
+    ],
+    image: "/images/realmadrid.jpeg",
+    stock: 55,
+    featured: true,
+    isNewDrop: true,
+    rating: 5.0,
+    reviewsCount: 65,
+    tags: ["26/27 Season", "Real Madrid", "La Liga", "KSh 1500"],
+    allowsCustomPrint: true
+  },
+  {
+    id: 105,
+    name: "Barca",
+    category: "season_26_27",
+    price: 1500,
+    originalPrice: 2000,
+    desc: "Official 26/27 Season FC Barcelona Home Kit. Signature Blaugrana blue and garnet red with Senyera detailing and optional custom print (+ KSh 500).",
+    details: [
+      "26/27 Season Blaugrana Edition",
+      "Breathable performance poly-blend fabric",
+      "Custom name & number print available for + KSh 500 (e.g. LAMINE YAMAL 19, LEWANDOWSKI 9, PEDRI 8)",
+      "Price: KSh 1,500 • Same-day Nairobi WhatsApp order"
+    ],
+    colors: [
+      { name: "Blaugrana Blue / Garnet", hex: "#004D98" }
+    ],
+    sizes: ["S", "M", "L", "XL", "XXL"],
+    images: [
+      "/images/barca.jpeg",
+      "/images/barca.jpg"
+    ],
+    image: "/images/barca.jpeg",
+    stock: 45,
+    featured: true,
+    isNewDrop: true,
+    rating: 5.0,
+    reviewsCount: 59,
+    tags: ["26/27 Season", "Barca", "Barcelona", "La Liga", "KSh 1500"],
+    allowsCustomPrint: true
+  },
+  {
+    id: 106,
+    name: "Arsenal",
+    category: "season_26_27",
+    price: 1500,
+    originalPrice: 2000,
+    desc: "Official 26/27 Season Arsenal Home Kit. Gunners scarlet red with crisp white sleeves, cannon crest, and optional custom print (+ KSh 500).",
+    details: [
+      "26/27 Season Gunners Edition with Emirates squad photo",
+      "Lightweight moisture-absorbing technical fabric",
+      "Custom name & number print available for + KSh 500 (e.g. SAKA 7, ODEGAARD 8, RICE 41)",
+      "Price: KSh 1,500 (Plain) / KSh 2,000 (With Custom Print) • Same-day delivery in Nairobi"
+    ],
+    colors: [
+      { name: "Gunners Scarlet Red / White", hex: "#EF0107" }
+    ],
+    sizes: ["S", "M", "L", "XL", "XXL"],
+    images: [
+      "/images/arsenal.png",
+      "/images/arsenal_team.jpg",
+      "/images/arsenal.jpg"
+    ],
+    image: "/images/arsenal.png",
+    stock: 50,
+    featured: true,
+    isNewDrop: true,
+    rating: 5.0,
+    reviewsCount: 63,
+    tags: ["26/27 Season", "Arsenal", "Gunners", "Premier League", "KSh 1500"],
+    allowsCustomPrint: true
+  },
+  {
+    id: 107,
+    name: "AC Milan",
+    category: "season_26_27",
+    price: 1500,
+    originalPrice: 2000,
+    desc: "Official 26/27 Season AC Milan Home Kit. Iconic Rossoneri vertical red and black stripes with gold star crest badge and optional custom name/number print (+ KSh 500).",
+    details: [
+      "26/27 Season Rossoneri Edition with embroidered star crest",
+      "High-performance breathable mesh body",
+      "Custom name & number print available for + KSh 500 (e.g. LEÃO 10, PULISIC 11, THEO 19)",
+      "Price: KSh 1,500 (Plain) / KSh 2,000 (With Custom Print) • Fast WhatsApp dispatch"
+    ],
+    colors: [
+      { name: "Rossoneri Red / Black", hex: "#AC1414" }
+    ],
+    sizes: ["S", "M", "L", "XL", "XXL"],
+    images: [
+      "/images/ac_milan.jpg"
+    ],
+    image: "/images/ac_milan.jpg",
+    stock: 35,
+    featured: true,
+    isNewDrop: true,
+    rating: 4.9,
+    reviewsCount: 38,
+    tags: ["26/27 Season", "AC Milan", "Serie A", "KSh 1500"],
+    allowsCustomPrint: true
+  },
+  {
+    id: 108,
+    name: "Inter Miami",
+    category: "season_26_27",
+    price: 1500,
+    originalPrice: 2000,
+    desc: "Official 26/27 Season Inter Miami Pink Kit. Signature vibrant blush pink with sleek black trims, dual herons club badge, and optional custom print (+ KSh 500).",
+    details: [
+      "26/27 Season Vice City Edition with silicone badge",
+      "Lightweight cooling fabric engineered for movement",
+      "Custom name & number print available for + KSh 500 (e.g. MESSI 10, SUAREZ 9, BUSQUETS 5)",
+      "Price: KSh 1,500 (Plain) / KSh 2,000 (With Custom Print) • Ready for same-day delivery"
+    ],
+    colors: [
+      { name: "Miami Flamingo Pink", hex: "#F7B5CD" }
+    ],
+    sizes: ["S", "M", "L", "XL", "XXL"],
+    images: [
+      "/images/intermiami.png",
+      "/images/intermiami.jpg"
+    ],
+    image: "/images/intermiami.png",
+    stock: 45,
+    featured: true,
+    isNewDrop: true,
+    rating: 5.0,
+    reviewsCount: 51,
+    tags: ["26/27 Season", "Inter Miami", "Messi 10", "MLS", "KSh 1500"],
+    allowsCustomPrint: true
+  },
+  {
+    id: 109,
+    name: "Inter Milan",
+    category: "season_26_27",
+    price: 1500,
+    originalPrice: 2000,
+    desc: "Official 26/27 Season Inter Milan Home Kit. Classic Nerazzurri royal blue and deep black vertical stripes with gold championship star and optional custom print (+ KSh 500).",
+    details: [
+      "26/27 Season Nerazzurri Edition with championship crest",
+      "Moisture-wicking micro-ventilation weave",
+      "Custom name & number print available for + KSh 500 (e.g. LAUTARO 10, BARELLA 23, THURAM 9)",
+      "Price: KSh 1,500 (Plain) / KSh 2,000 (With Custom Print) • WhatsApp direct order"
+    ],
+    colors: [
+      { name: "Nerazzurri Blue / Black", hex: "#004797" }
+    ],
+    sizes: ["S", "M", "L", "XL", "XXL"],
+    images: [
+      "/images/intermilan.jpeg",
+      "/images/intermilan.jpg"
+    ],
+    image: "/images/intermilan.jpeg",
+    stock: 35,
+    featured: true,
+    isNewDrop: true,
+    rating: 4.9,
+    reviewsCount: 34,
+    tags: ["26/27 Season", "Inter Milan", "Serie A", "KSh 1500"],
+    allowsCustomPrint: true
+  },
+  {
+    id: 110,
+    name: "Man City",
+    category: "season_26_27",
+    price: 1500,
+    originalPrice: 2000,
+    desc: "Official 26/27 Season Manchester City Home Kit. Signature sky blue with crisp navy trims, embroidered ship crest, and optional custom player print (+ KSh 500).",
+    details: [
+      "26/27 Season Cityzens Edition with authentic club badge",
+      "High-ventilation athletic Dri-Fit fabric",
+      "Custom name & number print available for + KSh 500 (e.g. HAALAND 9, DE BRUYNE 17, FODEN 47)",
+      "Price: KSh 1,500 (Plain) / KSh 2,000 (With Custom Print) • Instant Nairobi dispatch"
+    ],
+    colors: [
+      { name: "Sky Blue / Navy", hex: "#6CABDD" }
+    ],
+    sizes: ["S", "M", "L", "XL", "XXL"],
+    images: [
+      "/images/mancity.jpeg",
+      "/images/mancity.jpg"
+    ],
+    image: "/images/mancity.jpeg",
+    stock: 45,
+    featured: true,
+    isNewDrop: true,
+    rating: 5.0,
+    reviewsCount: 47,
+    tags: ["26/27 Season", "Man City", "Manchester City", "Premier League", "KSh 1500"],
+    allowsCustomPrint: true
+  },
+  {
     id: 1,
     name: "Retro 90s Brazil 1998 Ronaldo #9 Jersey",
     category: "retro_90s",
     price: 2500,
     originalPrice: 2800,
-    desc: "Iconic 1998 World Cup Edition: Custom printed canary yellow Brazil #9 Ronaldo (R9 'Il Fenomeno') retro kit. Signature forest green collar and sleeve trim with high-definition custom green heat-pressed back print.",
+    desc: "Iconic 1998 World Cup Edition: Custom printed canary yellow Brazil #9 Ronaldo (R9 'Il Fenomeno') retro kit with forest green collar and sleeve trim.",
     details: [
       "Custom heat-pressed bold green 'RONALDO 9' back print",
       "Vintage 1998 Canary Yellow with Forest Green ribbed collar & sleeve piping",
       "Breathable authentic athletic poly-mesh knit with quick-dry technology",
       "Embroidered crest with four world championship victory stars",
-      "High durability vinyl lettering - Custom printed & dispatched in Nairobi",
       "Available for instant Nairobi same-day delivery via rider"
     ],
     colors: [
@@ -337,23 +643,23 @@ export const INITIAL_PRODUCTS: Product[] = [
   },
   {
     id: 11,
-    name: "Branded 6-Panel Snapback Cap",
+    name: "Nickie 3D Embroidered Snapback Cap",
     category: "accessories",
     price: 1200,
     originalPrice: 1500,
-    desc: "Structured high-profile 6-panel snapback with 3D raised embroidery, breathable eyelets, and classic vintage underbill.",
+    desc: "Structured high-profile 6-panel snapback with 3D raised embroidery, breathable eyelets, and classic vintage green underbill. Available upon WhatsApp enquiry for immediate dispatch.",
     details: [
-      "100% heavy acrylic twill fabric",
-      "3D raised embroidery on front crown",
+      "100% heavy acrylic twill fabric with 3D raised embroidery",
       "Classic green undervisor for vintage authentic look",
-      "Adjustable 7-hole snapback closure"
+      "Adjustable 7-hole snapback closure (One Size Fits All)",
+      "Available upon WhatsApp enquiry • Same-day Nairobi delivery"
     ],
     colors: [
       { name: "All Black", hex: "#000000" },
       { name: "Navy / White", hex: "#172554" },
       { name: "Amber / Black", hex: "#d97706" }
     ],
-    sizes: ["M", "L"],
+    sizes: ["S", "M", "L", "XL"],
     images: [
       "https://images.unsplash.com/photo-1588850561407-ed78c282e89b?w=800&h=1000&fit=crop&q=80"
     ],
@@ -363,7 +669,294 @@ export const INITIAL_PRODUCTS: Product[] = [
     isNewDrop: false,
     rating: 4.8,
     reviewsCount: 38,
-    tags: ["Headwear", "Snapback"]
+    tags: ["Caps", "Headwear", "Snapback", "Available upon enquiry"]
+  },
+  {
+    id: 12,
+    name: "Reflective 3M Nairobi Cyber Track Hoodie",
+    category: "hoodie",
+    price: 2450,
+    originalPrice: 2800,
+    desc: "Ultra-heavyweight 450gsm Kenyan-milled fleece hoodie with 3M reflective chest typography and sleeve piping that shines under flash and night headlights. Available upon WhatsApp enquiry.",
+    details: [
+      "450gsm heavy brushed cotton fleece interior",
+      "Full 3M Scotchlite high-intensity reflective sleeve panels and chest print",
+      "Double-layered thermal hood with heavy metal drawcord tips",
+      "Kangaroo handwarmer pocket with hidden inner smartphone pouch",
+      "Available upon enquiry • Same-day Nairobi rider dispatch"
+    ],
+    colors: [
+      { name: "Stealth Black / 3M Silver", hex: "#111111" },
+      { name: "Charcoal Grey / 3M Silver", hex: "#374151" },
+      { name: "Electric Cyan / 3M Silver", hex: "#0891b2" }
+    ],
+    sizes: ["S", "M", "L", "XL", "XXL"],
+    images: [
+      "https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=800&h=1000&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1578768079052-aa76e52ff62e?w=800&h=1000&fit=crop&q=80"
+    ],
+    image: "https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=800&h=1000&fit=crop&q=80",
+    stock: 25,
+    featured: true,
+    isNewDrop: true,
+    rating: 5.0,
+    reviewsCount: 42,
+    tags: ["Hoodie", "Reflective 3M", "Night Runner", "Available upon enquiry"]
+  },
+  {
+    id: 13,
+    name: "3M High-Vis Safety & Street Reflector Vest",
+    category: "accessories",
+    price: 1500,
+    originalPrice: 1800,
+    desc: "Urban tactical street reflector vest with certified high-visibility fluorescent body, heavy-duty utility zipper, double-band 3M reflective striping, and modular chest ID/phone pouches. Available upon enquiry.",
+    details: [
+      "Certified 360° high-visibility 3M reflective tape",
+      "Heavy-duty front YKK zip with reinforced stitching",
+      "Multiple tactical utility chest pockets with pen and smartphone slots",
+      "Lightweight breathable polyester mesh for day and night use",
+      "Available upon WhatsApp enquiry • Dispatched in 1-2 hours in Nairobi"
+    ],
+    colors: [
+      { name: "Neon Safety Yellow", hex: "#eab308" },
+      { name: "Blaze Safety Orange", hex: "#f97316" },
+      { name: "Tactical Black / Neon", hex: "#18181b" }
+    ],
+    sizes: ["M", "L", "XL", "XXL"],
+    images: [
+      "https://images.unsplash.com/photo-1503341504253-dff4815485f1?w=800&h=1000&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1515523110800-9415d13b84a8?w=800&h=1000&fit=crop&q=80"
+    ],
+    image: "https://images.unsplash.com/photo-1503341504253-dff4815485f1?w=800&h=1000&fit=crop&q=80",
+    stock: 40,
+    featured: true,
+    isNewDrop: true,
+    rating: 4.9,
+    reviewsCount: 29,
+    tags: ["Reflectors", "High-Vis", "Streetwear", "Safety", "Available upon enquiry"]
+  },
+  {
+    id: 14,
+    name: "Reflective Streetwear Windbreaker Jacket",
+    category: "outerwear",
+    price: 2500,
+    originalPrice: 2900,
+    desc: "All-weather windproof and water-repellent jacket featuring reflective chevron chest banding, concealed hood, elastic cuffs, and breathable interior lining. Available upon enquiry.",
+    details: [
+      "Water-resistant windproof nylon shell with sealed seams",
+      "3M reflective chevron striping across chest, back and sleeves",
+      "Packable hood that rolls neatly into the collar",
+      "Dual zippered security side pockets & breathable mesh lining",
+      "Available upon WhatsApp enquiry • Nairobi doorstep delivery"
+    ],
+    colors: [
+      { name: "Stealth Black / 3M", hex: "#09090b" },
+      { name: "Arctic White / 3M", hex: "#f4f4f5" },
+      { name: "Cobalt Blue / 3M", hex: "#1d4ed8" }
+    ],
+    sizes: ["S", "M", "L", "XL", "XXL"],
+    images: [
+      "https://images.unsplash.com/photo-1517445312882-bc9910d016b7?w=800&h=1000&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=800&h=1000&fit=crop&q=80"
+    ],
+    image: "https://images.unsplash.com/photo-1517445312882-bc9910d016b7?w=800&h=1000&fit=crop&q=80",
+    stock: 20,
+    featured: false,
+    isNewDrop: true,
+    rating: 4.9,
+    reviewsCount: 33,
+    tags: ["Outerwear", "Windbreaker", "Reflectors", "Available upon enquiry"]
+  },
+  {
+    id: 15,
+    name: "Nairobi 254 Curved Brim Dad Cap",
+    category: "accessories",
+    price: 1200,
+    originalPrice: 1400,
+    desc: "Unstructured 6-panel low-profile dad cap crafted from 100% washed cotton twill with embroidered '254' area code and brass buckle strap. Available upon enquiry.",
+    details: [
+      "100% washed vintage cotton twill with relaxed soft crown",
+      "Embroidered clean '254 NAIROBI' logo on front",
+      "Curved pre-shaped sun protection brim",
+      "Antique brass tri-glide buckle strapback closure",
+      "Available upon WhatsApp enquiry • Same-day Nairobi dispatch"
+    ],
+    colors: [
+      { name: "Vintage Charcoal", hex: "#27272a" },
+      { name: "Washed Khaki", hex: "#a1887f" },
+      { name: "Forest Green", hex: "#1e3a2b" },
+      { name: "Burgundy Red", hex: "#7f1d1d" }
+    ],
+    sizes: ["S", "M", "L", "XL"],
+    images: [
+      "https://images.unsplash.com/photo-1588850561407-ed78c282e89b?w=800&h=1000&fit=crop&q=80"
+    ],
+    image: "https://images.unsplash.com/photo-1588850561407-ed78c282e89b?w=800&h=1000&fit=crop&q=80",
+    stock: 30,
+    featured: false,
+    isNewDrop: false,
+    rating: 4.8,
+    reviewsCount: 27,
+    tags: ["Caps", "Headwear", "Dad Cap", "Available upon enquiry"]
+  },
+  {
+    id: 16,
+    name: "Reflective 3M Brim Streetwear Bucket Hat",
+    category: "accessories",
+    price: 1350,
+    originalPrice: 1600,
+    desc: "Reversible streetwear bucket hat featuring water-resistant ripstop on one side and a fully 3M reflective outer brim that lights up in photos. Available upon enquiry.",
+    details: [
+      "Reversible 2-in-1 design (Matte Black / Reflective 3M)",
+      "High-luminescence reflective brim edge for night visibility",
+      "Stitched ventilation eyelets and packable flexible construction",
+      "Available upon WhatsApp enquiry • Nairobi CBD pick-up or rider delivery"
+    ],
+    colors: [
+      { name: "Pitch Black / 3M Glow", hex: "#18181b" },
+      { name: "Safari Sand / 3M", hex: "#d7ccc8" }
+    ],
+    sizes: ["M", "L"],
+    images: [
+      "https://images.unsplash.com/photo-1588850561407-ed78c282e89b?w=800&h=1000&fit=crop&q=80"
+    ],
+    image: "https://images.unsplash.com/photo-1588850561407-ed78c282e89b?w=800&h=1000&fit=crop&q=80",
+    stock: 22,
+    featured: false,
+    isNewDrop: true,
+    rating: 4.9,
+    reviewsCount: 19,
+    tags: ["Caps", "Bucket Hat", "Reflectors", "Available upon enquiry"]
+  },
+  {
+    id: 17,
+    name: "Heavyweight Boxy Graphic Tee (Nairobi Edition)",
+    category: "tshirt",
+    price: 1800,
+    originalPrice: 2200,
+    desc: "100% 240gsm combed heavyweight cotton tee with high-density puff print graphics and drop-shoulder streetwear cut. Available upon enquiry.",
+    details: [
+      "240gsm heavy single jersey cotton",
+      "Durable 3D puff print graphics that won't fade",
+      "Relaxed drop-shoulder oversized boxy silhouette",
+      "Thick 1.2-inch ribbed collar that holds its shape",
+      "Available upon WhatsApp enquiry • Immediate dispatch"
+    ],
+    colors: [
+      { name: "Chalk White", hex: "#fafafa" },
+      { name: "Pitch Black", hex: "#09090b" },
+      { name: "Washed Moss Green", hex: "#3f4a3c" }
+    ],
+    sizes: ["S", "M", "L", "XL", "XXL"],
+    images: [
+      "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=800&h=1000&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=800&h=1000&fit=crop&q=80"
+    ],
+    image: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=800&h=1000&fit=crop&q=80",
+    stock: 35,
+    featured: false,
+    isNewDrop: true,
+    rating: 4.9,
+    reviewsCount: 22,
+    tags: ["T-Shirts", "100% Cotton", "Heavyweight", "Available upon enquiry"]
+  },
+  {
+    id: 18,
+    name: "Custom Printed Ceramic Sublimation Mug",
+    category: "sublimation",
+    price: 650,
+    originalPrice: 850,
+    desc: "Premium 11oz high-grade ceramic coffee cup with ultra-glossy finish and vivid full-wrap sublimation printing. Perfect for company branding, personalized quotes, club crests, and gift sets. Available upon enquiry.",
+    details: [
+      "11oz premium AAA-grade ceramic with ultra-glossy white finish",
+      "High-definition 360° full-wrap sublimation print that never fades",
+      "Microwave and dishwasher safe durable protective glaze",
+      "Available upon WhatsApp enquiry • Single custom pieces or bulk corporate orders"
+    ],
+    colors: [
+      { name: "Pure White Ceramic", hex: "#ffffff" },
+      { name: "Inner Black Accent", hex: "#18181b" },
+      { name: "Inner Amber Gold", hex: "#f59e0b" }
+    ],
+    sizes: ["M", "L"],
+    images: [
+      "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=800&h=1000&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1577937927133-66ef06acdf18?w=800&h=1000&fit=crop&q=80"
+    ],
+    image: "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=800&h=1000&fit=crop&q=80",
+    stock: 50,
+    featured: true,
+    isNewDrop: true,
+    rating: 4.9,
+    reviewsCount: 45,
+    tags: ["Cup Sublimation", "Mug", "Sublimation", "Branding", "Available upon enquiry"],
+    allowsCustomPrint: true
+  },
+  {
+    id: 19,
+    name: "Custom Sublimation Sports Water Bottle",
+    category: "sublimation",
+    price: 1200,
+    originalPrice: 1500,
+    desc: "650ml food-grade aluminium/stainless steel sports water bottle with full-wrap high-resolution sublimation graphics, leak-proof sports nozzle, and quick-attach carabiner. Available upon enquiry.",
+    details: [
+      "650ml BPA-free food-grade stainless steel & aluminium build",
+      "Permanent full-circumference vibrant sublimation printing",
+      "Leak-proof sports cap with flip spout and outdoor carabiner hook",
+      "Scratch-resistant high-gloss coating engineered for daily use",
+      "Available upon WhatsApp enquiry • Personalized names, logos & gym graphics"
+    ],
+    colors: [
+      { name: "Gloss Sublimation White", hex: "#f8fafc" },
+      { name: "Brushed Metallic Silver", hex: "#94a3b8" },
+      { name: "Stealth Matte Black", hex: "#0f172a" }
+    ],
+    sizes: ["M", "L"],
+    images: [
+      "https://images.unsplash.com/photo-1602143407151-7111542de6e8?w=800&h=1000&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1523362628745-0c100150b504?w=800&h=1000&fit=crop&q=80"
+    ],
+    image: "https://images.unsplash.com/photo-1602143407151-7111542de6e8?w=800&h=1000&fit=crop&q=80",
+    stock: 45,
+    featured: true,
+    isNewDrop: true,
+    rating: 5.0,
+    reviewsCount: 31,
+    tags: ["Water Bottle", "Sublimation", "Drinkware", "Branding", "Available upon enquiry"],
+    allowsCustomPrint: true
+  },
+  {
+    id: 20,
+    name: "Large Format Stickers & Banners",
+    category: "stickers_banners",
+    price: 1500,
+    originalPrice: 2000,
+    desc: "Commercial-grade large format vinyl stickers, roll-up pull-up banners, teardrop flags, and die-cut custom decals. Waterproof, UV-resistant eco-solvent high-definition printing for brands and events. Available upon enquiry.",
+    details: [
+      "Heavy-duty waterproof die-cut vinyl stickers (matte or high-gloss)",
+      "Retractable roll-up pull-up display banners with aluminium carry case",
+      "UV-resistant, weather-proof outdoor PVC banner canvas",
+      "Custom sizes, vehicle branding, wall murals & storefront decals",
+      "Available upon WhatsApp enquiry • Rapid Nairobi printing & dispatch"
+    ],
+    colors: [
+      { name: "High-Gloss Vinyl", hex: "#ffffff" },
+      { name: "Matte Vinyl", hex: "#18181b" },
+      { name: "Clear / Transparent", hex: "#e2e8f0" }
+    ],
+    sizes: ["S", "M", "L", "XL"],
+    images: [
+      "https://images.unsplash.com/photo-1572945550746-953e5e407021?w=800&h=1000&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1626785774573-4b799315345d?w=800&h=1000&fit=crop&q=80"
+    ],
+    image: "https://images.unsplash.com/photo-1572945550746-953e5e407021?w=800&h=1000&fit=crop&q=80",
+    stock: 60,
+    featured: true,
+    isNewDrop: true,
+    rating: 4.9,
+    reviewsCount: 39,
+    tags: ["Large Format", "Stickers", "Banners", "Vinyl Stickers", "Roll-Up Banner", "Available upon enquiry"],
+    allowsCustomPrint: true
   }
 ];
 
@@ -473,12 +1066,16 @@ export function buildWhatsAppCartEnquiry(items: CartItem[], subtotal: number, de
   message += `\n🛍️ *ITEMS IN CART:*\n`;
 
   items.forEach((it, idx) => {
+    const hasCustomPrint = Boolean(it.customName?.trim() || it.customNumber?.trim());
+    const unitPrice = it.product.price + (hasCustomPrint ? CUSTOM_PRINT_FEE : 0);
+    const linePrice = unitPrice * it.quantity;
+
     message += `${idx + 1}. *${it.product.name}*\n`;
     message += `   • Size: ${it.selectedSize} | Color: ${it.selectedColor} | Qty: ${it.quantity}\n`;
-    if (it.customName || it.customNumber) {
-      message += `   • ✍️ *Custom Print:* Name: "${it.customName || 'N/A'}" | Number: "${it.customNumber || 'N/A'}"\n`;
+    if (hasCustomPrint) {
+      message += `   • ✍️ *Custom Print (+ KSh ${CUSTOM_PRINT_FEE}):* Name: "${it.customName || 'N/A'}" | Number: "${it.customNumber || 'N/A'}"\n`;
     }
-    message += `   • Price: ${formatKSh(it.product.price * it.quantity)}\n\n`;
+    message += `   • Price: ${formatKSh(linePrice)}\n\n`;
   });
 
   message += `──────────────\n`;
@@ -491,11 +1088,17 @@ export function buildWhatsAppCartEnquiry(items: CartItem[], subtotal: number, de
 }
 
 export function buildWhatsAppProductEnquiry(product: Product, selectedSize?: string, selectedColor?: string, customName?: string, customNumber?: string): string {
-  let message = `👋 Hello ${STORE_CONFIG.name}! I'm interested in the *${product.name}* (${formatKSh(product.price)}).\n`;
+  const hasCustomPrint = Boolean(customName?.trim() || customNumber?.trim());
+  const totalPrice = product.price + (hasCustomPrint ? CUSTOM_PRINT_FEE : 0);
+
+  let message = `👋 Hello ${STORE_CONFIG.name}! I'm interested in the *${product.name}* (Base: ${formatKSh(product.price)}).\n`;
   if (selectedSize) message += `• Size: ${selectedSize}\n`;
   if (selectedColor) message += `• Color: ${selectedColor}\n`;
-  if (customName || customNumber) {
-    message += `• ✍️ *Custom Print:* Name: "${customName || ''}" | Number: "${customNumber || ''}"\n`;
+  if (hasCustomPrint) {
+    message += `• ✍️ *Custom Print (+ KSh ${CUSTOM_PRINT_FEE}):* Name: "${customName || ''}" | Number: "${customNumber || ''}"\n`;
+    message += `• 💰 *Total with Print:* ${formatKSh(totalPrice)}\n`;
+  } else {
+    message += `• 💰 *Total:* ${formatKSh(totalPrice)}\n`;
   }
   message += `• Location: Nairobi, Kenya\n\n`;
   message += `Is this item currently in stock for Nairobi same-day dispatch?`;

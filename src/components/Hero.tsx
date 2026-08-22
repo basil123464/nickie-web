@@ -9,34 +9,54 @@ interface HeroProps {
 
 const HERO_DROPS = [
   {
-    id: 1,
-    title: "Brazil 1998 Ronaldo #9",
-    tag: "Retro 90s Drop",
-    subtitle: "Canary Yellow • Il Fenomeno Green Print",
-    price: 2500,
-    originalPrice: 2800,
-    image: "/images/brazil_ronaldo9_retro.jpg",
-    badge: "90s Retro Legend"
+    id: 101,
+    title: "Chelsea 2023",
+    tag: "2023 Season Classic",
+    subtitle: "Stamford Bridge Royal Blue • Gold Badge & Crest",
+    price: 1500,
+    originalPrice: 2000,
+    image: "/images/chelsea.jpeg",
+    badge: "Chelsea 2023 (KES 1,500)"
   },
   {
-    id: 2,
-    title: "Custom Print #10 Messi",
-    tag: "Legend Assemble",
-    subtitle: "Argentina Retro • Sky & White Stripes",
-    price: 2500,
-    originalPrice: 2800,
-    image: "/images/messi_custom_print_1787335485509.jpg",
-    badge: "Custom Print"
+    id: 104,
+    title: "Real Madrid",
+    tag: "26/27 Season Drop",
+    subtitle: "Bernabéu Pure White • Metallic Gold Accents",
+    price: 1500,
+    originalPrice: 2000,
+    image: "/images/realmadrid.jpeg",
+    badge: "Real Madrid (KES 1,500)"
   },
   {
-    id: 3,
-    title: "Custom Print #7 Ronaldo",
-    tag: "CR7 Retro Kit",
-    subtitle: "Portugal Retro • Gold Typography",
-    price: 2500,
-    originalPrice: 2800,
-    image: "/images/ronaldo_custom_print_1787335501119.jpg",
-    badge: "Best Seller"
+    id: 106,
+    title: "Arsenal",
+    tag: "26/27 Season Drop",
+    subtitle: "Gunners Scarlet Red • Clean White Sleeves",
+    price: 1500,
+    originalPrice: 2000,
+    image: "/images/arsenal.png",
+    badge: "Arsenal (KES 1,500)"
+  },
+  {
+    id: 105,
+    title: "Barca",
+    tag: "26/27 Season Drop",
+    subtitle: "Blaugrana Blue & Garnet • Senyera Detailing",
+    price: 1500,
+    originalPrice: 2000,
+    image: "/images/barca.jpeg",
+    badge: "Barca (KES 1,500)"
+  },
+  {
+    id: 102,
+    title: "Man Utd",
+    tag: "26/27 Season Drop",
+    subtitle: "Old Trafford Scarlet Red • Red Devils Crest",
+    price: 1500,
+    originalPrice: 2000,
+    image: "/images/manutd.jpeg",
+    badge: "Man Utd (KES 1,500)"
   }
 ];
 
@@ -56,48 +76,48 @@ export const Hero: React.FC<HeroProps> = ({ onExploreClick, onFilterCategory }) 
           <div className="lg:col-span-7">
             <div className="inline-flex items-center gap-2 bg-[#121212] border border-[#222222] px-3.5 py-1.5 rounded-full text-xs font-semibold text-amber-400 mb-5">
               <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-              <span>Nairobi Retro 90s & Custom Prints • Maximum KES 2,500</span>
+              <span>New 26/27 Season Kits at KES 1,500 • Instant WhatsApp Enquiries</span>
             </div>
 
             <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black tracking-tight leading-[1.05] text-white mb-5">
-              RETRO 90s & <br />
+              26/27 SEASON & <br />
               <span className="text-amber-500 underline decoration-amber-500/30 decoration-wavy underline-offset-8">
-                CUSTOM PRINTS.
+                RETRO 90s DROPS.
               </span>
             </h1>
 
             <p className="text-neutral-300 text-base sm:text-lg mb-7 max-w-xl leading-relaxed">
-              Iconic 90s Retro drops (Brazil 1998 Ronaldo #9, Argentina Messi #10, Portugal Ronaldo #7) plus any custom name & number. Maximum price capped at <strong className="text-amber-400 font-black">KES 2,500</strong> with same-day Nairobi delivery.
+              Official 26/27 Season Kits, Custom Printed Ceramic Mugs & Sports Water Bottles, Large Format Stickers & Banners, 90s Retro Kits, and Streetwear. All available upon enquiry with direct WhatsApp ordering.
             </p>
 
             {/* Action Buttons */}
             <div className="flex flex-wrap gap-3 sm:gap-4 mb-8">
               <button
-                id="hero-retro-90s-btn"
-                onClick={() => onFilterCategory('retro_90s')}
+                id="hero-season-2627-btn"
+                onClick={() => onFilterCategory('season_26_27')}
                 className="bg-amber-500 hover:bg-amber-400 text-black px-6 py-3.5 rounded-xl font-black text-sm tracking-wide transition shadow-lg shadow-amber-500/25 flex items-center gap-2 active:scale-95"
               >
-                <span>Retro 90s Kits (KES 2,500)</span>
+                <span>26/27 Season Kits (KES 1,500)</span>
                 <ArrowRight className="w-4 h-4" />
               </button>
 
               <button
-                id="hero-custom-print-btn"
-                onClick={() => onFilterCategory('custom_print')}
-                className="bg-[#121212] hover:bg-[#1a1a1a] text-amber-400 border border-amber-500/40 px-5 py-3.5 rounded-xl font-bold text-sm transition"
+                id="hero-sublimation-btn"
+                onClick={() => onFilterCategory('sublimation')}
+                className="bg-[#121212] hover:bg-[#1a1a1a] text-neutral-200 border border-[#222222] px-5 py-3.5 rounded-xl font-bold text-sm transition"
               >
-                Custom Name & No.
+                Mugs & Bottles
               </button>
 
               <a
                 id="hero-whatsapp-direct-btn"
-                href={`https://wa.me/${STORE_CONFIG.whatsappNumber}?text=${encodeURIComponent('Hello BRANDED 254, I want to order the Brazil 1998 Ronaldo 9 or custom printed retro jersey for delivery in Nairobi.')}`}
+                href={`https://wa.me/${STORE_CONFIG.whatsappNumber}?text=${encodeURIComponent(`Hello ${STORE_CONFIG.name}, I want to enquire about 26/27 Season Kits (KES 1,500), printed mugs/bottles, or stickers.`)}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-400 border border-emerald-500/30 px-5 py-3.5 rounded-xl font-bold text-sm transition flex items-center gap-2"
+                className="bg-emerald-600/25 hover:bg-emerald-600/40 text-emerald-400 border border-emerald-500/40 px-5 py-3.5 rounded-xl font-bold text-sm transition flex items-center gap-2 shadow-md shadow-emerald-950/30"
               >
-                <MessageCircle className="w-4 h-4" />
-                <span>WhatsApp Enquiry</span>
+                <MessageCircle className="w-4 h-4 fill-emerald-400/20" />
+                <span>WhatsApp: {STORE_CONFIG.whatsappDisplay}</span>
               </a>
             </div>
 
@@ -109,17 +129,17 @@ export const Hero: React.FC<HeroProps> = ({ onExploreClick, onFilterCategory }) 
                 </div>
                 <div>
                   <p className="font-bold text-white">Lipa na M-Pesa</p>
-                  <p className="text-neutral-500">Fast checkout & STK</p>
+                  <p className="text-neutral-500">Fast Paybill & Till</p>
                 </div>
               </div>
 
               <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-lg bg-[#121212] border border-[#222222] flex items-center justify-center shrink-0 text-amber-400">
-                  <Shield className="w-4 h-4" />
+                <div className="w-8 h-8 rounded-lg bg-[#121212] border border-[#222222] flex items-center justify-center shrink-0 text-emerald-400">
+                  <Sparkles className="w-4 h-4" />
                 </div>
                 <div>
-                  <p className="font-bold text-white">Nairobi Express</p>
-                  <p className="text-neutral-500">Same-Day Rider dispatch</p>
+                  <p className="font-bold text-white">Custom Sublimation</p>
+                  <p className="text-neutral-500">Mugs, Bottles & Banners</p>
                 </div>
               </div>
 
@@ -149,9 +169,14 @@ export const Hero: React.FC<HeroProps> = ({ onExploreClick, onFilterCategory }) 
                 {/* Floating Product Badge */}
                 <div className="absolute bottom-5 left-5 right-5 p-4 rounded-xl bg-[#0A0A0A]/90 backdrop-blur-md border border-[#222222] flex items-center justify-between gap-3">
                   <div>
-                    <span className="text-[10px] font-black uppercase tracking-wider text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/20">
-                      {activeDrop.tag}
-                    </span>
+                    <div className="flex items-center gap-1.5 mb-1">
+                      <span className="text-[10px] font-black uppercase tracking-wider text-emerald-400 bg-emerald-500/20 px-2 py-0.5 rounded border border-emerald-500/30 flex items-center gap-1">
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" /> Available upon Enquiry
+                      </span>
+                      <span className="text-[10px] font-black uppercase tracking-wider text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/20">
+                        {activeDrop.tag}
+                      </span>
+                    </div>
                     <h3 className="font-black text-white text-base mt-1">{activeDrop.title}</h3>
                     <p className="text-xs text-neutral-400">{activeDrop.subtitle}</p>
                   </div>

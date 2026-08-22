@@ -3,103 +3,118 @@ import { INITIAL_PRODUCTS, INITIAL_REVIEWS } from '../data/products';
 
 const API_BASE = '/api';
 
+// Helper for local persistent accounts
+function getLocalUsers(): Array<User & { passwordHash: string }> {
+  try {
+    const raw = localStorage.getItem('nickie_registered_users');
+    if (raw) return JSON.parse(raw);
+  } catch (e) {}
+  return [
+    {
+      id: "user-admin-1",
+      name: "Nickie Store Admin",
+      email: "admin@nickie.co.ke",
+      phone: "+254110226322",
+      role: "admin",
+      passwordHash: "admin123",
+      address: {
+        street: "CBD Flagship Store, Kimathi St",
+        city: "Nairobi",
+        county: "Nairobi County",
+        postalCode: "00100"
+      },
+      createdAt: new Date().toISOString()
+    }
+  ];
+}
+
+function saveLocalUsers(list: Array<User & { passwordHash: string }>) {
+  try {
+    localStorage.setItem('nickie_registered_users', JSON.stringify(list));
+  } catch (e) {}
+}
+
 export const api = {
   // ---------------- AUTH ----------------
   async register(data: { name: string; email: string; password: string; phone?: string; address?: any }): Promise<{ user: User; token: string }> {
+    const cleanEmail = data.email.trim().toLowerCase();
+    
+    // Save to local registry
+    const localList = getLocalUsers();
+    const existing = localList.find(u => u.email.toLowerCase() === cleanEmail);
+    if (existing) {
+      throw new Error('An account with this email already exists. Please Sign In.');
+    }
+
     try {
       const res = await fetch(`${API_BASE}/auth/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
+        body: JSON.stringify({ ...data, email: cleanEmail })
       });
-      if (!res.ok) {
-        const err = await res.json();
-        throw new Error(err.error || 'Registration failed');
+      if (res.ok) {
+        const result = await res.json();
+        localList.push({ ...result.user, passwordHash: data.password });
+        saveLocalUsers(localList);
+        return result;
       }
-      return await res.json();
-    } catch (e: any) {
-      // Local fallback for offline resilience
-      const user: User = {
-        id: `user-${Date.now()}`,
-        name: data.name,
-        email: data.email,
-        phone: data.phone || '',
-        role: 'customer',
-        address: data.address || { street: '', city: 'Nairobi', county: 'Nairobi County' },
-        createdAt: new Date().toISOString()
-      };
-      const token = `token-${user.id}`;
-      return { user, token };
-    }
+    } catch (e: any) {}
+
+    // Fallback/Local registration
+    const newUser: User & { passwordHash: string } = {
+      id: `user-${Date.now()}`,
+      name: data.name.trim(),
+      email: cleanEmail,
+      phone: data.phone?.trim() || '',
+      role: 'customer',
+      passwordHash: data.password,
+      address: data.address || { street: '', city: 'Nairobi', county: 'Nairobi County' },
+      createdAt: new Date().toISOString()
+    };
+    localList.push(newUser);
+    saveLocalUsers(localList);
+
+    const { passwordHash, ...userToReturn } = newUser;
+    const token = `token-${newUser.id}-${Date.now()}`;
+    return { user: userToReturn, token };
   },
 
   async login(email: string, password: string): Promise<{ user: User; token: string }> {
+    const cleanEmail = email.trim().toLowerCase();
+
     try {
       const res = await fetch(`${API_BASE}/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password })
+        body: JSON.stringify({ email: cleanEmail, password })
       });
-      if (!res.ok) {
+      if (res.ok) {
+        const result = await res.json();
+        return result;
+      }
+      if (res.status === 401 || res.status === 400 || res.status === 409) {
         const err = await res.json();
         throw new Error(err.error || 'Invalid email or password');
       }
-      return await res.json();
     } catch (e: any) {
-      if (email === 'admin@branded.co.ke') {
-        const adminUser: User = {
-          id: 'user-admin-1',
-          name: 'Branded Admin',
-          email: 'admin@branded.co.ke',
-          phone: '+254700112233',
-          role: 'admin',
-          address: { street: 'CBD Store', city: 'Nairobi', county: 'Nairobi County' },
-          createdAt: new Date().toISOString()
-        };
-        return { user: adminUser, token: 'token-admin-1' };
+      if (e.message && e.message.includes('Invalid') || e.message.includes('password') || e.message.includes('exists')) {
+        throw e;
       }
-      const demoUser: User = {
-        id: 'user-demo-1',
-        name: 'Basil Wanyonyi',
-        email: email || 'demo@branded.co.ke',
-        phone: '+254712345678',
-        role: 'customer',
-        address: { street: 'Argwings Kodhek Rd, Kilimani', city: 'Nairobi', county: 'Nairobi County' },
-        createdAt: new Date().toISOString()
-      };
-      return { user: demoUser, token: 'token-demo-1' };
     }
-  },
 
-  async demoLogin(role: 'customer' | 'admin' = 'customer'): Promise<{ user: User; token: string }> {
-    try {
-      const res = await fetch(`${API_BASE}/auth/demo`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ role })
-      });
-      if (res.ok) return await res.json();
-    } catch (e) {}
+    // Local authentication check
+    const localList = getLocalUsers();
+    const match = localList.find(u => u.email.toLowerCase() === cleanEmail);
+    if (!match) {
+      throw new Error('No account found with this email. Please click "Create Account" to sign up.');
+    }
+    if (match.passwordHash !== password) {
+      throw new Error('Incorrect password. Please verify and try again.');
+    }
 
-    const isCustomer = role === 'customer';
-    const user: User = isCustomer ? {
-      id: 'user-demo-1',
-      name: 'Basil Wanyonyi',
-      email: 'demo@branded.co.ke',
-      phone: '+254712345678',
-      role: 'customer',
-      address: { street: 'Argwings Kodhek Rd, Kilimani', city: 'Nairobi', county: 'Nairobi County' },
-      createdAt: new Date().toISOString()
-    } : {
-      id: 'user-admin-1',
-      name: 'Branded Admin',
-      email: 'admin@branded.co.ke',
-      phone: '+254700112233',
-      role: 'admin',
-      address: { street: 'CBD Store', city: 'Nairobi', county: 'Nairobi County' },
-      createdAt: new Date().toISOString()
-    };
-    return { user, token: `token-${user.id}` };
+    const { passwordHash, ...userToReturn } = match;
+    const token = `token-${match.id}-${Date.now()}`;
+    return { user: userToReturn, token };
   },
 
   async updateProfile(userId: string, data: { name?: string; phone?: string; address?: any }): Promise<{ user: User }> {
@@ -112,12 +127,27 @@ export const api = {
       if (res.ok) return await res.json();
     } catch (e) {}
 
+    // Update locally
+    const localList = getLocalUsers();
+    const idx = localList.findIndex(u => u.id === userId);
+    if (idx !== -1) {
+      localList[idx] = {
+        ...localList[idx],
+        name: data.name || localList[idx].name,
+        phone: data.phone !== undefined ? data.phone : localList[idx].phone,
+        address: data.address || localList[idx].address
+      };
+      saveLocalUsers(localList);
+      const { passwordHash, ...userToReturn } = localList[idx];
+      return { user: userToReturn };
+    }
+
     return {
       user: {
         id: userId,
-        name: data.name || 'Basil Wanyonyi',
-        email: 'demo@branded.co.ke',
-        phone: data.phone || '+254712345678',
+        name: data.name || 'Customer',
+        email: 'user@nickiestore.co.ke',
+        phone: data.phone || '+254110226322',
         role: 'customer',
         address: data.address || { street: '', city: 'Nairobi', county: 'Nairobi' },
         createdAt: new Date().toISOString()

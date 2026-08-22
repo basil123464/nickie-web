@@ -65,15 +65,15 @@ export const Footer: React.FC<FooterProps> = ({ onSelectCategory, onOpenTrack, o
           {/* Brand Info */}
           <div className="space-y-4">
             <div className="flex items-center gap-2">
-              <div className="w-7 h-7 bg-amber-500 rounded flex items-center justify-center font-black text-black text-xs">
-                B
+              <div className="w-7 h-7 bg-amber-500 rounded-lg flex items-center justify-center font-black text-black text-xs">
+                N
               </div>
               <span className="text-lg font-black text-white tracking-tight">
-                BRANDED<span className="text-amber-500">.</span>
+                NICKIE<span className="text-amber-500"> STORE</span>
               </span>
             </div>
             <p className="text-neutral-400 text-xs leading-relaxed">
-              Authentic Kenyan streetwear label. Crafted with 450gsm heavyweight fleece, breathable dry-fit jerseys, and custom silhouettes designed for the culture.
+              Nairobi's premier destination for 26/27 season club kits, retro football jerseys, custom name & number printing (+ KSh 500), and luxury heavyweight streetwear.
             </p>
             <div className="flex items-center gap-2 pt-2">
               <span className="px-2.5 py-1 rounded bg-[#121212] border border-[#222222] text-[11px] font-bold text-emerald-400">
@@ -93,8 +93,23 @@ export const Footer: React.FC<FooterProps> = ({ onSelectCategory, onOpenTrack, o
             <h4 className="font-bold text-white uppercase tracking-wider text-xs mb-3">Collections</h4>
             <ul className="space-y-2">
               <li>
-                <button onClick={() => onSelectCategory('retro_90s')} className="hover:text-amber-400 text-amber-400 font-bold transition">
+                <button onClick={() => onSelectCategory('season_26_27')} className="hover:text-amber-400 text-amber-400 font-bold transition">
+                  26/27 Season Kits (KES 1,500)
+                </button>
+              </li>
+              <li>
+                <button onClick={() => onSelectCategory('retro_90s')} className="hover:text-amber-400 font-medium transition">
                   Retro 90s Football (Max KES 2,500)
+                </button>
+              </li>
+              <li>
+                <button onClick={() => onSelectCategory('sublimation')} className="hover:text-amber-400 font-medium transition">
+                  Cup & Bottle Sublimation
+                </button>
+              </li>
+              <li>
+                <button onClick={() => onSelectCategory('stickers_banners')} className="hover:text-amber-400 font-medium transition">
+                  Large Format Stickers & Banners
                 </button>
               </li>
               <li>
@@ -103,46 +118,36 @@ export const Footer: React.FC<FooterProps> = ({ onSelectCategory, onOpenTrack, o
                 </button>
               </li>
               <li>
-                <button onClick={() => onSelectCategory('jersey')} className="hover:text-amber-400 transition">
-                  Legend Assemble Kits
-                </button>
-              </li>
-              <li>
                 <button onClick={() => onSelectCategory('hoodie')} className="hover:text-amber-400 transition">
                   Heavyweight Hoodies (450gsm)
                 </button>
               </li>
               <li>
-                <button onClick={() => onSelectCategory('tshirt')} className="hover:text-amber-400 transition">
-                  Boxy Heavy Tees
-                </button>
-              </li>
-              <li>
-                <button onClick={() => onSelectCategory('bottoms')} className="hover:text-amber-400 transition">
-                  Tactical Cargo Pants
+                <button onClick={() => onSelectCategory('accessories')} className="hover:text-amber-400 transition">
+                  Reflectors & Caps
                 </button>
               </li>
             </ul>
           </div>
 
-          {/* Quick Help & Track */}
+          {/* Quick Help & Enquiry */}
           <div>
-            <h4 className="font-bold text-white uppercase tracking-wider text-xs mb-3">Customer Care</h4>
+            <h4 className="font-bold text-white uppercase tracking-wider text-xs mb-3">Orders & Enquiry</h4>
             <ul className="space-y-2">
               <li>
                 <button onClick={onOpenTrack} className="hover:text-amber-400 transition flex items-center gap-1.5">
                   <MapPin className="w-3.5 h-3.5 text-amber-500" />
-                  <span>Track Your Shipment</span>
+                  <span>Track Your Order</span>
                 </button>
               </li>
               <li>
-                <span className="text-neutral-400">Nairobi Same-Day Rider Delivery</span>
+                <span className="text-neutral-400">All Items Available upon Enquiry</span>
               </li>
               <li>
-                <span className="text-neutral-400">Countrywide Courier (Fargo / G4S)</span>
+                <span className="text-neutral-400">Custom Sublimation & Branding</span>
               </li>
               <li>
-                <span className="text-neutral-400">7-Day Free Size Exchange Policy</span>
+                <span className="text-neutral-400">Direct WhatsApp Customer Support</span>
               </li>
             </ul>
           </div>
@@ -173,9 +178,9 @@ export const Footer: React.FC<FooterProps> = ({ onSelectCategory, onOpenTrack, o
 
         {/* Bottom copyright */}
         <div className="pt-8 mt-8 border-t border-[#222222] flex flex-col sm:flex-row justify-between items-center gap-4 text-[11px] text-neutral-500">
-          <p>© 2026 BRANDED. Streetwear Kenya. All rights reserved. All prices quoted in Kenyan Shillings (KSh).</p>
+          <p>© 2026 NICKIE STORE. Football Kits & Custom Prints Kenya. All rights reserved. All prices in Kenyan Shillings (KSh).</p>
           <p className="flex items-center gap-1 text-neutral-400">
-            Handcrafted for the 254 Streetwear Culture.
+            Nairobi Fast Rider Dispatch • WhatsApp: {STORE_CONFIG.whatsappDisplay}
           </p>
         </div>
       </div>

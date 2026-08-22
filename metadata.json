@@ -1,6 +1,6 @@
 {
-  "name": "BRANDED. Streetwear Store",
-  "description": "Nairobi Custom Print & Streetwear e-commerce store with KSh pricing (max KES 2,500 for Legend Retro), WhatsApp order enquiry (+254 711 022 632), user auth, Lipa na M-Pesa, and same-day delivery.",
+  "name": "Nickie Store",
+  "description": "Nickie Store - Nairobi Football Kits, Sublimation Cups & Water Bottles, Large Format Stickers & Banners, and Streetwear with KSh pricing, custom name and print (+ KES 500), and WhatsApp order dispatch (+254 110 226 322).",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

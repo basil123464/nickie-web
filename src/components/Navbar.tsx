@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
-import { ShoppingBag, Heart, User as UserIcon, Search, Menu, X, ShieldCheck, MapPin, Truck, ChevronRight, MessageCircle, Mail } from 'lucide-react';
+import { Heart, User as UserIcon, Search, Menu, X, ShieldCheck, MapPin, ChevronRight, MessageCircle, Mail, Sparkles } from 'lucide-react';
 import { User } from '../types';
 import { STORE_CONFIG } from '../data/products';
 
 interface NavbarProps {
-  cartCount: number;
+  cartCount?: number;
   wishlistCount: number;
   currentUser: User | null;
   activeCategory: string;
   onSelectCategory: (category: string) => void;
-  onOpenCart: () => void;
+  onOpenCart?: () => void;
   onOpenWishlist: () => void;
   onOpenAuth: () => void;
   onOpenProfile: () => void;
@@ -20,12 +20,10 @@ interface NavbarProps {
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
-  cartCount,
   wishlistCount,
   currentUser,
   activeCategory,
   onSelectCategory,
-  onOpenCart,
   onOpenWishlist,
   onOpenAuth,
   onOpenProfile,
@@ -39,14 +37,21 @@ export const Navbar: React.FC<NavbarProps> = ({
 
   const categories = [
     { id: 'all', label: 'All Items' },
+    { id: 'season_26_27', label: '26/27 Season Kits (KES 1,500)' },
     { id: 'retro_90s', label: 'Retro 90s (Max 2,500)' },
+    { id: 'sublimation', label: 'Cup & Bottle Sublimation' },
+    { id: 'stickers_banners', label: 'Large Format Stickers & Banners' },
     { id: 'custom_print', label: 'Custom Print' },
-    { id: 'jersey', label: 'Jerseys' },
     { id: 'hoodie', label: 'Hoodies' },
+    { id: 'accessories', label: 'Reflectors & Caps' },
     { id: 'tshirt', label: 'T-Shirts' },
     { id: 'bottoms', label: 'Cargo & Pants' },
-    { id: 'accessories', label: 'Caps & Gear' },
   ];
+
+  const handleGeneralWhatsAppEnquiry = () => {
+    const text = encodeURIComponent(`Hello ${STORE_CONFIG.name}, I would like to enquire and place an order for jerseys, custom mugs/bottles, or large format stickers/banners.`);
+    window.open(`https://wa.me/${STORE_CONFIG.whatsappNumber}?text=${text}`, '_blank', 'noopener,noreferrer');
+  };
 
   return (
     <>
@@ -56,19 +61,19 @@ export const Navbar: React.FC<NavbarProps> = ({
           <div className="flex items-center gap-3">
             <span className="inline-flex items-center gap-1.5 font-semibold text-amber-400">
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-              Nairobi Hub (CBD & Express Dispatch)
+              Nairobi Hub (CBD & Quick Dispatch)
             </span>
             <span className="hidden sm:inline text-neutral-600">•</span>
-            <span className="hidden md:inline-flex items-center gap-1 text-neutral-400">
-              <Truck className="w-3.5 h-3.5 text-neutral-400" />
-              Nairobi Same-Day Rider • Max Price KES 2,500
+            <span className="hidden md:inline-flex items-center gap-1 text-emerald-400 font-medium">
+              <Sparkles className="w-3.5 h-3.5" />
+              Available upon WhatsApp Enquiry • Mugs, Bottles, Stickers & Jerseys
             </span>
           </div>
 
           <div className="flex items-center gap-3 sm:gap-4 text-xs">
             {/* WhatsApp Quick Link */}
             <a
-              href={`https://wa.me/${STORE_CONFIG.whatsappNumber}?text=${encodeURIComponent('Hello BRANDED 254, I would like to make an enquiry about custom prints and streetwear.')}`}
+              href={`https://wa.me/${STORE_CONFIG.whatsappNumber}?text=${encodeURIComponent(`Hello ${STORE_CONFIG.name}, I would like to make an enquiry about 26/27 jerseys, mugs, bottles, stickers, and streetwear.`)}`}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-1 text-emerald-400 hover:text-emerald-300 transition font-medium"
@@ -131,29 +136,29 @@ export const Navbar: React.FC<NavbarProps> = ({
               }}
               className="flex items-center gap-2.5 group"
             >
-              <div className="w-9 h-9 bg-amber-500 group-hover:bg-amber-400 transition rounded flex items-center justify-center font-black text-black text-base shadow-lg shadow-amber-500/20">
-                B
+              <div className="w-9 h-9 bg-amber-500 group-hover:bg-amber-400 transition rounded-xl flex items-center justify-center font-black text-black text-base shadow-lg shadow-amber-500/20">
+                N
               </div>
               <div className="flex flex-col">
                 <span className="text-xl font-black tracking-tight text-white leading-none">
-                  BRANDED<span className="text-amber-500">.</span>
+                  NICKIE<span className="text-amber-500"> STORE</span>
                 </span>
                 <span className="text-[10px] uppercase font-bold tracking-widest text-amber-400/90">
-                  Custom Print • Nairobi
+                  Sublimation, Stickers & Kits
                 </span>
               </div>
             </a>
 
             {/* Desktop Nav Links */}
-            <nav className="hidden lg:flex items-center gap-1 ml-4">
-              {categories.map((cat) => (
+            <nav className="hidden xl:flex items-center gap-1 ml-4 overflow-x-auto">
+              {categories.slice(0, 6).map((cat) => (
                 <button
                   key={cat.id}
                   id={`nav-link-${cat.id}`}
                   onClick={() => onSelectCategory(cat.id)}
-                  className={`px-3 py-1.5 rounded-lg text-sm font-medium transition ${
+                  className={`px-2.5 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition ${
                     activeCategory === cat.id
-                      ? 'text-amber-400 bg-[#121212] font-semibold border border-[#222222]'
+                      ? 'text-amber-400 bg-[#121212] border border-[#222222]'
                       : 'text-neutral-400 hover:text-white hover:bg-[#121212]/50'
                   }`}
                 >
@@ -166,14 +171,14 @@ export const Navbar: React.FC<NavbarProps> = ({
           {/* Search bar & Action Icons */}
           <div className="flex items-center gap-3 sm:gap-4">
             {/* Desktop Search Bar */}
-            <div className="relative hidden md:block w-64 lg:w-72">
+            <div className="relative hidden md:block w-56 lg:w-64">
               <input
                 id="desktop-search-input"
                 type="text"
                 value={searchQuery}
                 onChange={(e) => onSearchChange(e.target.value)}
-                placeholder="Search hoodies, tees, jerseys..."
-                className="w-full bg-[#121212] border border-[#222222] focus:border-amber-500 focus:outline-none rounded-xl pl-9 pr-8 py-2 text-sm text-white placeholder-neutral-500 transition"
+                placeholder="Search mugs, bottles, kits..."
+                className="w-full bg-[#121212] border border-[#222222] focus:border-amber-500 focus:outline-none rounded-xl pl-9 pr-8 py-2 text-xs text-white placeholder-neutral-500 transition"
               />
               <Search className="w-4 h-4 text-neutral-400 absolute left-3 top-2.5 pointer-events-none" />
               {searchQuery && (
@@ -222,7 +227,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 <div className="w-6 h-6 rounded-full bg-amber-500 text-black font-bold text-xs flex items-center justify-center">
                   {currentUser.name.charAt(0).toUpperCase()}
                 </div>
-                <span className="hidden sm:inline text-xs font-semibold text-neutral-200 max-w-[100px] truncate">
+                <span className="hidden sm:inline text-xs font-semibold text-neutral-200 max-w-[90px] truncate">
                   {currentUser.name.split(' ')[0]}
                 </span>
               </button>
@@ -237,28 +242,23 @@ export const Navbar: React.FC<NavbarProps> = ({
               </button>
             )}
 
-            {/* Cart Button */}
+            {/* Primary Direct WhatsApp Action Button (Replaces Cart) */}
             <button
-              id="cart-header-btn"
-              onClick={onOpenCart}
-              className="relative bg-amber-500 hover:bg-amber-400 text-black px-3.5 py-2 rounded-xl font-bold text-sm transition flex items-center gap-2 shadow-lg shadow-amber-500/20 active:scale-95"
-              aria-label="Cart"
+              id="whatsapp-header-btn"
+              onClick={handleGeneralWhatsAppEnquiry}
+              className="relative bg-emerald-600 hover:bg-emerald-500 text-white px-3.5 py-2 rounded-xl font-black text-xs sm:text-sm transition flex items-center gap-2 shadow-lg shadow-emerald-950/40 active:scale-95 border border-emerald-400/30"
+              aria-label="Enquire on WhatsApp"
             >
-              <ShoppingBag className="w-4 h-4" />
-              <span className="hidden sm:inline">Cart</span>
-              <span
-                id="cart-count-badge"
-                className="bg-black text-amber-400 text-xs font-bold px-1.5 py-0.5 rounded-md min-w-[20px] text-center"
-              >
-                {cartCount}
-              </span>
+              <MessageCircle className="w-4 h-4" />
+              <span className="hidden sm:inline">WhatsApp Enquiry</span>
+              <span className="sm:hidden font-bold">Chat</span>
             </button>
 
             {/* Mobile Menu Toggle */}
             <button
               id="mobile-menu-toggle-btn"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden p-2 rounded-xl text-neutral-300 hover:text-white hover:bg-[#121212] transition"
+              className="xl:hidden p-2 rounded-xl text-neutral-300 hover:text-white hover:bg-[#121212] transition"
               aria-label="Toggle Menu"
             >
               {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -275,8 +275,8 @@ export const Navbar: React.FC<NavbarProps> = ({
                 type="text"
                 value={searchQuery}
                 onChange={(e) => onSearchChange(e.target.value)}
-                placeholder="Search hoodies, tees, jerseys in KSh..."
-                className="w-full bg-[#121212] border border-[#222222] focus:border-amber-500 focus:outline-none rounded-xl pl-9 pr-8 py-2 text-sm text-white placeholder-neutral-500"
+                placeholder="Search mugs, bottles, stickers, kits..."
+                className="w-full bg-[#121212] border border-[#222222] focus:border-amber-500 focus:outline-none rounded-xl pl-9 pr-8 py-2 text-xs text-white placeholder-neutral-500"
                 autoFocus
               />
               <Search className="w-4 h-4 text-neutral-400 absolute left-3 top-2.5" />
@@ -294,8 +294,8 @@ export const Navbar: React.FC<NavbarProps> = ({
 
         {/* Mobile Drawer Menu */}
         {mobileMenuOpen && (
-          <div className="lg:hidden border-t border-[#222222] bg-[#121212]/98 backdrop-blur-xl px-4 py-5 space-y-4">
-            <p className="text-xs font-bold uppercase tracking-wider text-neutral-500">Categories</p>
+          <div className="xl:hidden border-t border-[#222222] bg-[#121212]/98 backdrop-blur-xl px-4 py-5 space-y-4">
+            <p className="text-xs font-bold uppercase tracking-wider text-neutral-500">Categories (Available upon Enquiry)</p>
             <div className="grid grid-cols-2 gap-2">
               {categories.map((cat) => (
                 <button
@@ -304,14 +304,14 @@ export const Navbar: React.FC<NavbarProps> = ({
                     onSelectCategory(cat.id);
                     setMobileMenuOpen(false);
                   }}
-                  className={`flex items-center justify-between p-3 rounded-xl text-left text-sm font-medium transition ${
+                  className={`flex items-center justify-between p-2.5 rounded-xl text-left text-xs font-semibold transition ${
                     activeCategory === cat.id
                       ? 'bg-amber-500 text-black font-bold'
                       : 'bg-[#181818] border border-[#222222] text-neutral-300 hover:bg-[#202020]'
                   }`}
                 >
-                  <span>{cat.label}</span>
-                  <ChevronRight className="w-4 h-4 opacity-60" />
+                  <span className="line-clamp-1">{cat.label}</span>
+                  <ChevronRight className="w-3.5 h-3.5 opacity-60 shrink-0" />
                 </button>
               ))}
             </div>
@@ -322,7 +322,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   onOpenTrack();
                   setMobileMenuOpen(false);
                 }}
-                className="w-full text-left px-3 py-2.5 rounded-xl text-sm font-medium text-neutral-300 hover:bg-[#1a1a1a] flex items-center justify-between"
+                className="w-full text-left px-3 py-2.5 rounded-xl text-xs font-medium text-neutral-300 hover:bg-[#1a1a1a] flex items-center justify-between"
               >
                 <span className="flex items-center gap-2">
                   <MapPin className="w-4 h-4 text-amber-500" />
@@ -337,7 +337,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                     onOpenAdmin();
                     setMobileMenuOpen(false);
                   }}
-                  className="w-full text-left px-3 py-2.5 rounded-xl text-sm font-medium text-amber-400 hover:bg-[#1a1a1a] flex items-center justify-between"
+                  className="w-full text-left px-3 py-2.5 rounded-xl text-xs font-medium text-amber-400 hover:bg-[#1a1a1a] flex items-center justify-between"
                 >
                   <span className="flex items-center gap-2">
                     <ShieldCheck className="w-4 h-4" />

@@ -1,14 +1,13 @@
 import React from 'react';
-import { X, Heart, ShoppingBag, Trash2, ArrowRight } from 'lucide-react';
+import { X, Heart, MessageCircle, Trash2, ArrowRight } from 'lucide-react';
 import { Product } from '../types';
-import { formatKSh } from '../data/products';
+import { formatKSh, buildWhatsAppProductEnquiry } from '../data/products';
 
 interface WishlistDrawerProps {
   isOpen: boolean;
   onClose: () => void;
   items: Product[];
   onRemove: (product: Product) => void;
-  onMoveToCart: (product: Product) => void;
   onShowToast: (msg: string) => void;
 }
 
@@ -17,10 +16,14 @@ export const WishlistDrawer: React.FC<WishlistDrawerProps> = ({
   onClose,
   items,
   onRemove,
-  onMoveToCart,
   onShowToast,
 }) => {
   if (!isOpen) return null;
+
+  const handleWhatsAppEnquire = (prod: Product) => {
+    const waUrl = buildWhatsAppProductEnquiry(prod, prod.sizes[0], prod.colors[0]?.name);
+    window.open(waUrl, '_blank', 'noopener,noreferrer');
+  };
 
   return (
     <div id="wishlist-drawer-overlay" className="fixed inset-0 z-50 overflow-hidden bg-black/80 backdrop-blur-sm animate-fadeIn">
@@ -34,7 +37,7 @@ export const WishlistDrawer: React.FC<WishlistDrawerProps> = ({
               </div>
               <div>
                 <h2 className="text-base font-black text-white">Saved Wishlist</h2>
-                <p className="text-xs text-neutral-400">{items.length} saved streetwear pieces</p>
+                <p className="text-xs text-neutral-400">{items.length} saved pieces</p>
               </div>
             </div>
             <button
@@ -54,7 +57,7 @@ export const WishlistDrawer: React.FC<WishlistDrawerProps> = ({
                 </div>
                 <h3 className="text-base font-bold text-white">No items in wishlist</h3>
                 <p className="text-xs text-neutral-400 max-w-xs">
-                  Tap the heart icon on any hoodie, tee, or jersey to save your favorites for later.
+                  Tap the heart icon on any item, mug, bottle, or sticker to save your favorites.
                 </p>
               </div>
             ) : (
@@ -81,18 +84,15 @@ export const WishlistDrawer: React.FC<WishlistDrawerProps> = ({
                           <Trash2 className="w-3.5 h-3.5" />
                         </button>
                       </div>
-                      <p className="text-xs font-black text-amber-400 mt-1">{formatKSh(prod.price)}</p>
+                      <p className="text-xs font-black text-emerald-400 mt-1">{formatKSh(prod.price)}</p>
                     </div>
 
                     <button
-                      onClick={() => {
-                        onMoveToCart(prod);
-                        onShowToast(`Moved ${prod.name} to cart!`);
-                      }}
-                      className="w-full mt-2 bg-amber-500 hover:bg-amber-400 text-black py-1.5 px-3 rounded-lg font-bold text-xs transition flex items-center justify-center gap-1.5 shadow-md shadow-amber-500/20"
+                      onClick={() => handleWhatsAppEnquire(prod)}
+                      className="w-full mt-2 bg-emerald-600 hover:bg-emerald-500 text-white py-1.5 px-3 rounded-lg font-bold text-xs transition flex items-center justify-center gap-1.5 shadow-md shadow-emerald-950/30"
                     >
-                      <ShoppingBag className="w-3.5 h-3.5" />
-                      <span>Move to Cart</span>
+                      <MessageCircle className="w-3.5 h-3.5" />
+                      <span>Enquire on WhatsApp</span>
                     </button>
                   </div>
                 </div>

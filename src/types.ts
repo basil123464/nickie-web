@@ -1,8 +1,8 @@
 export interface Product {
   id: number;
   name: string;
-  category: 'hoodie' | 'tshirt' | 'jersey' | 'custom_print' | 'retro_90s' | 'bottoms' | 'outerwear' | 'accessories';
-  price: number; // in KSh (max 2500 KES across all items)
+  category: 'jersey' | 'season_26_27' | 'retro_90s' | 'custom_print' | 'hoodie' | 'tshirt' | 'bottoms' | 'outerwear' | 'accessories' | 'sublimation' | 'stickers_banners';
+  price: number; // in KSh (1500 KES for 26/27 season kits, max 2500 KES across catalog)
   originalPrice?: number; // in KSh (for sale badges)
   desc: string;
   details: string[];

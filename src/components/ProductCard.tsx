@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
-import { Heart, Eye, ShoppingBag, Star, Check } from 'lucide-react';
+import { Heart, Eye, Star, MessageCircle, Send, Sparkles } from 'lucide-react';
 import { Product } from '../types';
-import { formatKSh } from '../data/products';
+import { formatKSh, buildWhatsAppProductEnquiry, STORE_CONFIG } from '../data/products';
 
 interface ProductCardProps {
   product: Product;
   isWishlisted: boolean;
   onToggleWishlist: (product: Product) => void;
   onQuickView: (product: Product) => void;
-  onAddToCart: (product: Product, size: string, color: string) => void;
+  onAddToCart?: (product: Product, size: string, color: string) => void;
 }
 
 export const ProductCard: React.FC<ProductCardProps> = ({
@@ -16,19 +16,19 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   isWishlisted,
   onToggleWishlist,
   onQuickView,
-  onAddToCart,
 }) => {
   const [selectedColor, setSelectedColor] = useState(product.colors[0]?.name || 'Default');
   const [selectedSize, setSelectedSize] = useState(product.sizes[0] || 'M');
   const [showQuickSize, setShowQuickSize] = useState(false);
-  const [addedAnim, setAddedAnim] = useState(false);
 
-  const handleQuickAdd = () => {
-    onAddToCart(product, selectedSize, selectedColor);
-    setAddedAnim(true);
+  const handleDirectWhatsAppEnquiry = (sizeOverride?: string) => {
+    const sizeToUse = sizeOverride || selectedSize;
+    const waUrl = buildWhatsAppProductEnquiry(product, sizeToUse, selectedColor);
+    window.open(waUrl, '_blank', 'noopener,noreferrer');
     setShowQuickSize(false);
-    setTimeout(() => setAddedAnim(false), 1800);
   };
+
+  const is2627Kit = product.category === 'season_26_27' || product.tags.some(t => t.toLowerCase().includes('26/27'));
 
   return (
     <article
@@ -46,10 +46,30 @@ export const ProductCard: React.FC<ProductCardProps> = ({
 
         {/* Badges */}
         <div className="absolute top-3 left-3 flex flex-col gap-1.5 z-10">
-          <span className="px-2.5 py-1 bg-[#0A0A0A]/85 backdrop-blur-md border border-[#222222] text-[11px] font-bold rounded-md uppercase tracking-wider text-neutral-300">
-            {product.category}
+          {/* Availability upon enquiry Badge */}
+          <span className="px-2.5 py-1 bg-emerald-500/95 text-black text-[10px] font-black rounded-md uppercase tracking-wider shadow-md flex items-center gap-1.5 backdrop-blur-sm">
+            <span className="w-1.5 h-1.5 rounded-full bg-black animate-pulse" />
+            Available upon Enquiry
           </span>
-          {product.isNewDrop && (
+
+          {is2627Kit ? (
+            <span className="px-2.5 py-1 bg-amber-500 text-black text-[11px] font-black rounded-md uppercase tracking-wider shadow-md">
+              26/27 Season (KES 1,500)
+            </span>
+          ) : (
+            <span className="px-2.5 py-1 bg-[#0A0A0A]/85 backdrop-blur-md border border-[#222222] text-[11px] font-bold rounded-md uppercase tracking-wider text-neutral-300">
+              {product.category === 'sublimation'
+                ? 'Sublimation'
+                : product.category === 'stickers_banners'
+                ? 'Stickers & Banners'
+                : product.category === 'custom_print'
+                ? 'Custom Print'
+                : product.category === 'accessories' && product.tags.includes('Reflectors')
+                ? 'Reflectors'
+                : product.category.replace('_', ' ')}
+            </span>
+          )}
+          {product.isNewDrop && !is2627Kit && (
             <span className="px-2 py-0.5 bg-amber-500 text-black text-[10px] font-black rounded-md uppercase tracking-wider shadow-sm">
               New Drop
             </span>
@@ -86,7 +106,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
             className="flex-1 bg-[#0A0A0A]/90 hover:bg-[#181818] border border-[#222222] backdrop-blur-md text-white py-2.5 px-3 rounded-xl font-bold text-xs flex items-center justify-center gap-1.5 transition"
           >
             <Eye className="w-3.5 h-3.5" />
-            <span>Quick View</span>
+            <span>Customize & Details</span>
           </button>
         </div>
       </div>
@@ -94,21 +114,23 @@ export const ProductCard: React.FC<ProductCardProps> = ({
       {/* Product Content Details */}
       <div className="p-5 flex-1 flex flex-col justify-between">
         <div>
-          {/* Rating and Reviews */}
-          <div className="flex items-center gap-1.5 mb-1.5 text-xs text-neutral-400">
-            <div className="flex items-center text-amber-400">
-              <Star className="w-3.5 h-3.5 fill-current" />
-              <span className="ml-1 font-bold text-white text-xs">{product.rating}</span>
-            </div>
-            <span className="text-neutral-600">•</span>
-            <span>{product.reviewsCount} reviews</span>
+          {/* Custom Print & Availability status */}
+          <div className="flex flex-wrap items-center gap-1.5 mb-2">
+            <span className="text-emerald-400 font-bold text-[11px] inline-flex items-center gap-1 bg-emerald-950/60 border border-emerald-500/40 px-2 py-0.5 rounded-md">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> Available upon Enquiry
+            </span>
+            {product.allowsCustomPrint && (
+              <span className="text-amber-300 font-semibold text-[11px] inline-flex items-center gap-1 bg-amber-950/40 border border-amber-500/30 px-2 py-0.5 rounded-md">
+                <Sparkles className="w-3 h-3 text-amber-400" /> Custom Print (+ KSh 500)
+              </span>
+            )}
           </div>
 
           {/* Title & Price in KSh */}
-          <div className="flex justify-between items-start gap-2 mb-2">
+          <div className="flex justify-between items-start gap-2 mb-1.5">
             <h3
               onClick={() => onQuickView(product)}
-              className="font-bold text-base text-white hover:text-amber-400 transition cursor-pointer leading-snug line-clamp-1"
+              className="font-black text-base text-white hover:text-amber-400 transition cursor-pointer leading-snug line-clamp-1"
             >
               {product.name}
             </h3>
@@ -123,45 +145,22 @@ export const ProductCard: React.FC<ProductCardProps> = ({
                 {formatKSh(product.originalPrice)}
               </span>
             )}
+            <span className="text-[10px] font-semibold text-emerald-400 bg-emerald-950/50 px-2 py-0.5 rounded border border-emerald-500/30">
+              WhatsApp Order
+            </span>
           </div>
 
           <p className="text-neutral-400 text-xs line-clamp-2 mb-4 leading-relaxed">
             {product.desc}
           </p>
-
-          {/* Color Selector Pills */}
-          <div className="mb-4">
-            <div className="flex items-center justify-between text-[11px] text-neutral-400 mb-1.5">
-              <span>Color:</span>
-              <span className="font-semibold text-neutral-200">{selectedColor}</span>
-            </div>
-            <div className="flex flex-wrap gap-1.5">
-              {product.colors.map((c) => (
-                <button
-                  key={c.name}
-                  type="button"
-                  onClick={() => setSelectedColor(c.name)}
-                  title={c.name}
-                  className={`w-6 h-6 rounded-full border-2 transition flex items-center justify-center ${
-                    selectedColor === c.name ? 'border-amber-400 scale-110' : 'border-[#333333] opacity-80 hover:opacity-100'
-                  }`}
-                  style={{ backgroundColor: c.hex }}
-                >
-                  {selectedColor === c.name && (
-                    <span className="w-1.5 h-1.5 rounded-full bg-white shadow" />
-                  )}
-                </button>
-              ))}
-            </div>
-          </div>
         </div>
 
-        {/* Quick Size Selection & Add to Cart Button */}
+        {/* WhatsApp Enquiry & Quick Size Selector */}
         <div>
           {showQuickSize ? (
-            <div className="bg-[#0A0A0A] p-3 rounded-xl border border-[#222222] mb-2 space-y-2">
+            <div className="bg-[#0A0A0A] p-3 rounded-xl border border-emerald-500/40 mb-2 space-y-2">
               <div className="flex items-center justify-between text-xs text-neutral-300 font-semibold">
-                <span>Select Size:</span>
+                <span className="text-emerald-400 font-bold">Select Size to Enquire:</span>
                 <button
                   onClick={() => setShowQuickSize(false)}
                   className="text-neutral-400 hover:text-white"
@@ -173,10 +172,13 @@ export const ProductCard: React.FC<ProductCardProps> = ({
                 {product.sizes.map((sz) => (
                   <button
                     key={sz}
-                    onClick={() => setSelectedSize(sz)}
+                    onClick={() => {
+                      setSelectedSize(sz);
+                      handleDirectWhatsAppEnquiry(sz);
+                    }}
                     className={`flex-1 py-1.5 rounded-lg text-xs font-bold transition ${
                       selectedSize === sz
-                        ? 'bg-amber-500 text-black'
+                        ? 'bg-emerald-500 text-black'
                         : 'bg-[#181818] border border-[#222222] text-neutral-300 hover:bg-[#222222]'
                     }`}
                   >
@@ -185,47 +187,37 @@ export const ProductCard: React.FC<ProductCardProps> = ({
                 ))}
               </div>
               <button
-                id={`confirm-add-cart-${product.id}`}
-                onClick={handleQuickAdd}
-                className="w-full bg-amber-500 hover:bg-amber-400 text-black py-2 rounded-lg font-bold text-xs transition"
+                id={`confirm-enquiry-${product.id}`}
+                onClick={() => handleDirectWhatsAppEnquiry()}
+                className="w-full bg-emerald-600 hover:bg-emerald-500 text-white py-2 rounded-lg font-bold text-xs transition flex items-center justify-center gap-1.5"
               >
-                Add {selectedSize} • {selectedColor} to Cart
+                <MessageCircle className="w-3.5 h-3.5" />
+                <span>Chat Size {selectedSize} on WhatsApp</span>
               </button>
             </div>
           ) : (
             <div className="flex gap-2">
               <button
-                id={`add-to-cart-btn-${product.id}`}
+                id={`enquire-whatsapp-btn-${product.id}`}
                 onClick={() => {
                   if (product.sizes.length > 1) {
                     setShowQuickSize(true);
                   } else {
-                    handleQuickAdd();
+                    handleDirectWhatsAppEnquiry();
                   }
                 }}
-                className={`flex-1 py-2.5 px-4 rounded-xl font-bold text-xs transition duration-200 flex items-center justify-center gap-2 active:scale-98 border border-[#222222] ${
-                  addedAnim
-                    ? 'bg-emerald-500 text-black border-transparent'
-                    : 'bg-[#181818] hover:bg-amber-500 hover:text-black hover:border-transparent text-white'
-                }`}
+                className="flex-1 py-2.5 px-4 rounded-xl font-black text-xs transition duration-200 flex items-center justify-center gap-2 active:scale-98 bg-emerald-600 hover:bg-emerald-500 text-white shadow-lg shadow-emerald-950/40 border border-emerald-500/30"
               >
-                {addedAnim ? (
-                  <>
-                    <Check className="w-4 h-4" />
-                    <span>Added to Cart!</span>
-                  </>
-                ) : (
-                  <>
-                    <ShoppingBag className="w-4 h-4" />
-                    <span>Add to Cart</span>
-                  </>
-                )}
+                <MessageCircle className="w-4 h-4" />
+                <span>Enquire via WhatsApp</span>
               </button>
+
               <button
                 id={`mobile-quick-view-${product.id}`}
                 onClick={() => onQuickView(product)}
-                className="sm:hidden p-2.5 rounded-xl bg-[#181818] border border-[#222222] text-neutral-300 hover:text-white"
-                aria-label="Quick View"
+                className="p-2.5 rounded-xl bg-[#181818] hover:bg-[#222222] border border-[#222222] text-neutral-300 hover:text-white"
+                aria-label="View Product Details"
+                title="View Details"
               >
                 <Eye className="w-4 h-4" />
               </button>
@@ -236,3 +228,4 @@ export const ProductCard: React.FC<ProductCardProps> = ({
     </article>
   );
 };
+

@@ -269,6 +269,7 @@ export const AdminModal: React.FC<AdminModalProps> = ({
                   onChange={(e) => setCategory(e.target.value as any)}
                   className="w-full bg-[#0A0A0A] border border-[#222222] rounded-xl px-3 py-2 text-white focus:outline-none focus:border-amber-500"
                 >
+                  <option value="season_26_27">26/27 Season Kit (KES 1,500)</option>
                   <option value="retro_90s">Retro 90s Kit</option>
                   <option value="custom_print">Custom Print Drop</option>
                   <option value="jersey">Jersey</option>

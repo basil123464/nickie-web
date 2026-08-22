@@ -154,7 +154,7 @@ export const FloatingWhatsApp: React.FC = () => {
         id="floating-whatsapp-trigger-btn"
         onClick={() => setIsOpen(!isOpen)}
         className="group relative bg-[#25D366] hover:bg-[#20bd5a] text-white p-3.5 sm:p-4 rounded-full shadow-2xl hover:shadow-emerald-500/30 transition-all duration-300 transform hover:scale-105 active:scale-95 flex items-center gap-2.5 border-2 border-emerald-300/40"
-        aria-label="Chat on WhatsApp +2547110226322"
+        aria-label={`Chat on WhatsApp ${STORE_CONFIG.whatsappDisplay}`}
       >
         {/* Pulse effect */}
         <span className="absolute -inset-1 rounded-full bg-emerald-500/30 animate-ping pointer-events-none opacity-75" />

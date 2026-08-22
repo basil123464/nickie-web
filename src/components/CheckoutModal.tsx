@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { X, Check, ShieldCheck, Phone, CreditCard, Truck, MapPin, ArrowRight, ArrowLeft, Loader2, Sparkles, Receipt, MessageCircle } from 'lucide-react';
 import { CartItem, User, Order } from '../types';
-import { formatKSh, DELIVERY_OPTIONS, STORE_CONFIG } from '../data/products';
+import { formatKSh, DELIVERY_OPTIONS, STORE_CONFIG, CUSTOM_PRINT_FEE } from '../data/products';
 import { api } from '../lib/api';
 
 interface CheckoutModalProps {
@@ -26,22 +26,34 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
   const [step, setStep] = useState<1 | 2 | 3>(1);
 
   // Step 1: Delivery info
-  const [customerName, setCustomerName] = useState(currentUser?.name || 'Basil Wanyonyi');
-  const [email, setEmail] = useState(currentUser?.email || 'lusopio93@gmail.com');
-  const [phone, setPhone] = useState(currentUser?.phone || '+254 711 022 632');
-  const [street, setStreet] = useState(currentUser?.address?.street || 'Argwings Kodhek Rd, Kilimani');
+  const [customerName, setCustomerName] = useState(currentUser?.name || '');
+  const [email, setEmail] = useState(currentUser?.email || '');
+  const [phone, setPhone] = useState(currentUser?.phone || '');
+  const [street, setStreet] = useState(currentUser?.address?.street || '');
   const [city, setCity] = useState(currentUser?.address?.city || 'Nairobi');
   const [county, setCounty] = useState(currentUser?.address?.county || 'Nairobi County');
-  const [deliveryNotes, setDeliveryNotes] = useState('Call before arrival');
+  const [deliveryNotes, setDeliveryNotes] = useState('');
   const [deliveryMethod, setDeliveryMethod] = useState<'nairobi_cbd' | 'nairobi_express' | 'upcountry_courier'>('nairobi_express');
 
   // Step 2: Payment method
   const [paymentMethod, setPaymentMethod] = useState<'mpesa' | 'card' | 'cod'>('mpesa');
-  const [mpesaPhone, setMpesaPhone] = useState(currentUser?.phone || '0711022632');
+  const [mpesaPhone, setMpesaPhone] = useState(currentUser?.phone || '');
   const [isProcessingMpesa, setIsProcessingMpesa] = useState(false);
   const [mpesaPromptSent, setMpesaPromptSent] = useState(false);
   const [mpesaPinInput, setMpesaPinInput] = useState('');
   const [simulatedMpesaSuccess, setSimulatedMpesaSuccess] = useState(false);
+
+  // Update fields when currentUser changes
+  React.useEffect(() => {
+    if (currentUser) {
+      if (!customerName) setCustomerName(currentUser.name);
+      if (!email) setEmail(currentUser.email);
+      if (!phone) setPhone(currentUser.phone || '');
+      if (!street) setStreet(currentUser.address?.street || '');
+      if (!city) setCity(currentUser.address?.city || 'Nairobi');
+      if (!mpesaPhone) setMpesaPhone(currentUser.phone || '');
+    }
+  }, [currentUser]);
 
   // Card details
   const [cardNumber, setCardNumber] = useState('4242 •••• •••• 4242');
@@ -54,7 +66,12 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
 
   if (!isOpen) return null;
 
-  const subtotal = items.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
+  const getItemUnitPrice = (item: CartItem) => {
+    const hasCustomPrint = Boolean(item.customName?.trim() || item.customNumber?.trim());
+    return item.product.price + (hasCustomPrint ? CUSTOM_PRINT_FEE : 0);
+  };
+
+  const subtotal = items.reduce((sum, item) => sum + getItemUnitPrice(item) * item.quantity, 0);
   const discount = appliedPromo ? appliedPromo.discountAmount : 0;
   const selectedDeliveryOption = DELIVERY_OPTIONS.find((d) => d.id === deliveryMethod);
   
@@ -105,15 +122,19 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
         },
         deliveryMethod,
         paymentMethod,
-        items: items.map((i) => ({
-          productId: i.product.id,
-          name: i.product.name,
-          price: i.product.price,
-          color: i.selectedColor,
-          size: i.selectedSize,
-          quantity: i.quantity,
-          image: i.product.image,
-        })),
+        items: items.map((i) => {
+          const unitPrice = getItemUnitPrice(i);
+          const hasCustomPrint = Boolean(i.customName?.trim() || i.customNumber?.trim());
+          return {
+            productId: i.product.id,
+            name: hasCustomPrint ? `${i.product.name} (Print: ${i.customName || ''} #${i.customNumber || ''})` : i.product.name,
+            price: unitPrice,
+            color: i.selectedColor,
+            size: i.selectedSize,
+            quantity: i.quantity,
+            image: i.product.image,
+          };
+        }),
         subtotal,
         shippingFee,
         discount,
@@ -139,12 +160,12 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
         {/* Header */}
         <div className="p-4 sm:p-5 border-b border-[#222222] flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-amber-500 text-black flex items-center justify-center font-black text-xs">
-              B
+            <div className="w-8 h-8 rounded-xl bg-amber-500 text-black flex items-center justify-center font-black text-xs shadow-md shadow-amber-500/20">
+              N
             </div>
             <div>
-              <h2 className="text-base font-black text-white">Express Kenyan Checkout</h2>
-              <p className="text-xs text-neutral-400">Official Lipa na M-Pesa & Card Gateway</p>
+              <h2 className="text-base font-black text-white">{STORE_CONFIG.name} Checkout</h2>
+              <p className="text-xs text-neutral-400">Official Lipa na M-Pesa & Card Gateway • Nairobi Dispatch</p>
             </div>
           </div>
           {step !== 3 && (

@@ -34,7 +34,7 @@ let users: (User & { passwordHash: string })[] = [
     id: "user-demo-1",
     name: "Basil Wanyonyi",
     email: "lusopio93@gmail.com",
-    phone: "+254711022632",
+    phone: "+254110226322",
     role: "customer",
     passwordHash: "pass123",
     address: {
@@ -49,7 +49,7 @@ let users: (User & { passwordHash: string })[] = [
     id: "user-admin-1",
     name: "Branded Admin",
     email: "admin@branded.co.ke",
-    phone: "+254711022632",
+    phone: "+254110226322",
     role: "admin",
     passwordHash: "admin123",
     address: {
@@ -69,7 +69,7 @@ let orders: Order[] = [
     userId: "user-demo-1",
     customerName: "Basil Wanyonyi",
     email: "lusopio93@gmail.com",
-    phone: "+254711022632",
+    phone: "+254110226322",
     deliveryAddress: {
       street: "Argwings Kodhek Rd, Apt 4B",
       city: "Kilimani, Nairobi",
@@ -111,7 +111,7 @@ function sanitizeUser(user: User & { passwordHash?: string }): User {
 
 // ----------------- HEALTH -----------------
 apiRouter.get('/health', (req: Request, res: Response) => {
-  res.json({ status: 'ok', store: 'BRANDED. Streetwear Store', currency: 'KSh', time: new Date().toISOString() });
+  res.json({ status: 'ok', store: 'NICKIE STORE Nairobi', currency: 'KSh', time: new Date().toISOString() });
 });
 
 // ----------------- AUTH -----------------
@@ -217,12 +217,14 @@ apiRouter.get('/products', (req: Request, res: Response) => {
   let result = [...products];
 
   if (category && category !== 'all') {
-    if (category === 'retro_90s') {
+    if (category === 'season_26_27') {
+      result = result.filter(p => p.category === 'season_26_27' || p.tags.some(t => t.toLowerCase().includes('26/27')));
+    } else if (category === 'retro_90s') {
       result = result.filter(p => p.category === 'retro_90s' || p.tags.some(t => t.toLowerCase().includes('retro')));
     } else if (category === 'custom_print') {
       result = result.filter(p => p.category === 'custom_print' || p.allowsCustomPrint);
     } else if (category === 'jersey') {
-      result = result.filter(p => p.category === 'jersey' || p.category === 'retro_90s' || p.name.toLowerCase().includes('jersey'));
+      result = result.filter(p => p.category === 'jersey' || p.category === 'season_26_27' || p.category === 'retro_90s' || p.name.toLowerCase().includes('jersey') || p.name.toLowerCase().includes('kit'));
     } else {
       result = result.filter(p => p.category === category);
     }

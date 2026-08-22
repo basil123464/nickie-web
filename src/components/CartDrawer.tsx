@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { X, Trash2, ShoppingBag, ArrowRight, Tag, Check, Truck, MessageCircle, MapPin } from 'lucide-react';
 import { CartItem } from '../types';
-import { formatKSh, buildWhatsAppCartEnquiry, STORE_CONFIG } from '../data/products';
+import { formatKSh, buildWhatsAppCartEnquiry, STORE_CONFIG, CUSTOM_PRINT_FEE } from '../data/products';
 import { api } from '../lib/api';
 
 interface CartDrawerProps {
@@ -35,7 +35,13 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
   if (!isOpen) return null;
 
   const FREE_SHIPPING_THRESHOLD = 5000;
-  const subtotal = items.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
+  
+  const getItemUnitPrice = (item: CartItem) => {
+    const hasCustomPrint = Boolean(item.customName?.trim() || item.customNumber?.trim());
+    return item.product.price + (hasCustomPrint ? CUSTOM_PRINT_FEE : 0);
+  };
+
+  const subtotal = items.reduce((sum, item) => sum + getItemUnitPrice(item) * item.quantity, 0);
   const discount = appliedPromo ? appliedPromo.discountAmount : 0;
   const finalTotal = Math.max(0, subtotal - discount);
   const progressPercent = Math.min(100, Math.round((subtotal / FREE_SHIPPING_THRESHOLD) * 100));
@@ -215,13 +221,17 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
 
                       <div className="text-right">
                         <p className="text-xs font-black text-amber-400">
-                          {formatKSh(item.product.price * item.quantity)}
+                          {formatKSh(getItemUnitPrice(item) * item.quantity)}
                         </p>
-                        {item.quantity > 1 && (
+                        {item.quantity > 1 ? (
                           <p className="text-[10px] text-neutral-500">
-                            {formatKSh(item.product.price)} each
+                            {formatKSh(getItemUnitPrice(item))} each
                           </p>
-                        )}
+                        ) : (item.customName || item.customNumber) ? (
+                          <p className="text-[10px] text-amber-400/80">
+                            (incl. +{formatKSh(CUSTOM_PRINT_FEE)} print)
+                          </p>
+                        ) : null}
                       </div>
                     </div>
                   </div>
