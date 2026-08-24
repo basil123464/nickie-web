@@ -1,5 +1,16 @@
 import { Product, Review, Order, User, PromoCode } from '../types';
 import { INITIAL_PRODUCTS, INITIAL_REVIEWS } from '../data/products';
+import { 
+  getProductsFromFirestore, 
+  saveProductToFirestore, 
+  deleteProductFromFirestore,
+  saveOrderToFirestore, 
+  getOrderByTrackingCodeFromFirestore,
+  updateOrderStatusInFirestore,
+  saveReviewToFirestore,
+  subscribeToProducts,
+  subscribeToOrders
+} from '../services/firebaseInventory';
 
 const API_BASE = '/api';
 
@@ -35,6 +46,10 @@ function saveLocalUsers(list: Array<User & { passwordHash: string }>) {
 }
 
 export const api = {
+  // Real-time Firestore subscriptions export
+  subscribeProducts: subscribeToProducts,
+  subscribeOrders: subscribeToOrders,
+
   // ---------------- AUTH ----------------
   async register(data: { name: string; email: string; password: string; phone?: string; address?: any }): Promise<{ user: User; token: string }> {
     const cleanEmail = data.email.trim().toLowerCase();
@@ -97,7 +112,7 @@ export const api = {
         throw new Error(err.error || 'Invalid email or password');
       }
     } catch (e: any) {
-      if (e.message && e.message.includes('Invalid') || e.message.includes('password') || e.message.includes('exists')) {
+      if (e.message && (e.message.includes('Invalid') || e.message.includes('password') || e.message.includes('exists'))) {
         throw e;
       }
     }
@@ -155,66 +170,100 @@ export const api = {
     };
   },
 
-  // ---------------- PRODUCTS ----------------
+  // ---------------- PRODUCTS & INVENTORY ----------------
   async getProducts(params?: { category?: string; search?: string; sort?: string }): Promise<Product[]> {
+    let list: Product[] = [];
+
+    // Attempt direct Firestore fetch first (cached & lightning fast)
     try {
-      const query = new URLSearchParams();
-      if (params?.category && params.category !== 'all') query.set('category', params.category);
-      if (params?.search) query.set('search', params.search);
-      if (params?.sort) query.set('sort', params.sort);
+      list = await getProductsFromFirestore();
+    } catch (e) {
+      try {
+        const query = new URLSearchParams();
+        if (params?.category && params.category !== 'all') query.set('category', params.category);
+        if (params?.search) query.set('search', params.search);
+        if (params?.sort) query.set('sort', params.sort);
 
-      const res = await fetch(`${API_BASE}/products?${query.toString()}`);
-      if (res.ok) {
-        return await res.json();
-      }
-    } catch (e) {}
+        const res = await fetch(`${API_BASE}/products?${query.toString()}`);
+        if (res.ok) {
+          list = await res.json();
+        }
+      } catch (err) {}
+    }
 
-    // Fallback filter
-    let result = [...INITIAL_PRODUCTS];
+    if (!list || list.length === 0) {
+      list = [...INITIAL_PRODUCTS];
+    }
+
+    // Apply filtering & sorting in memory for ultra-fast responsive UI
+    let result = [...list];
     if (params?.category && params.category !== 'all') {
       result = result.filter(p => p.category === params.category);
     }
     if (params?.search) {
-      const q = params.search.toLowerCase();
+      const q = params.search.toLowerCase().trim();
       result = result.filter(p => 
         p.name.toLowerCase().includes(q) || 
         p.desc.toLowerCase().includes(q) ||
-        p.tags.some(t => t.toLowerCase().includes(q))
+        (p.tags && p.tags.some(t => t.toLowerCase().includes(q)))
       );
     }
     if (params?.sort === 'price_asc') result.sort((a, b) => a.price - b.price);
     if (params?.sort === 'price_desc') result.sort((a, b) => b.price - a.price);
+
     return result;
   },
 
   async addProduct(productData: Partial<Product>): Promise<Product> {
-    try {
-      const res = await fetch(`${API_BASE}/products`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(productData)
-      });
-      if (res.ok) return await res.json();
-    } catch (e) {}
-
-    const newP: Product = {
+    const newProd: Product = {
       id: Date.now(),
       name: productData.name || 'New Streetwear Drop',
-      category: productData.category || 'hoodie',
-      price: productData.price || 3500,
-      desc: productData.desc || 'Premium streetwear garment.',
-      details: productData.details || ['100% Streetwear Grade Cotton'],
-      colors: productData.colors || [{ name: 'Black', hex: '#000000' }],
+      category: productData.category || 'retro_90s',
+      price: productData.price || 2500,
+      originalPrice: productData.originalPrice,
+      desc: productData.desc || 'Authentic premium streetwear garment.',
+      details: productData.details || ['100% High-Density Breathable Material', 'Durable Print & Stitching', 'Official Grade Fit'],
+      colors: productData.colors || [{ name: 'Default', hex: '#000000' }],
       sizes: productData.sizes || ['S', 'M', 'L', 'XL'],
-      images: [productData.image || 'https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=800&h=1000&fit=crop'],
-      image: productData.image || 'https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=800&h=1000&fit=crop',
-      stock: productData.stock || 10,
+      images: productData.images && productData.images.length > 0 ? productData.images : [productData.image || '/images/streetwear_hoodie.jpg'],
+      image: productData.image || '/images/streetwear_hoodie.jpg',
+      stock: productData.stock || 15,
       rating: 5.0,
       reviewsCount: 1,
       isNewDrop: true,
-      tags: ['New Drop']
+      featured: productData.featured || false,
+      tags: productData.tags || ['New Drop', 'In Stock']
     };
-    return newP;
+
+    // Save to Firebase Firestore
+    await saveProductToFirestore(newProd);
+
+    // Also sync with backend API
+    try {
+      await fetch(`${API_BASE}/products`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newProd)
+      });
+    } catch (e) {}
+
+    return newProd;
+  },
+
+  async updateProduct(productId: number | string, updates: Partial<Product>): Promise<void> {
+    try {
+      const fullList = await getProductsFromFirestore();
+      const target = fullList.find(p => String(p.id) === String(productId));
+      if (target) {
+        await saveProductToFirestore({ ...target, ...updates });
+      }
+    } catch (e) {
+      console.warn('Update product error:', e);
+    }
+  },
+
+  async deleteProduct(productId: number | string): Promise<boolean> {
+    return await deleteProductFromFirestore(productId);
   },
 
   // ---------------- REVIEWS ----------------
@@ -227,16 +276,7 @@ export const api = {
   },
 
   async addReview(productId: number, data: { userName: string; userCity: string; rating: number; comment: string }): Promise<Review> {
-    try {
-      const res = await fetch(`${API_BASE}/products/${productId}/reviews`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
-      });
-      if (res.ok) return await res.json();
-    } catch (e) {}
-
-    return {
+    const review: Review = {
       id: `rev-${Date.now()}`,
       productId,
       userName: data.userName,
@@ -246,6 +286,19 @@ export const api = {
       comment: data.comment,
       verified: true
     };
+
+    // Save to Firebase Firestore
+    await saveReviewToFirestore(review);
+
+    try {
+      await fetch(`${API_BASE}/products/${productId}/reviews`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+    } catch (e) {}
+
+    return review;
   },
 
   // ---------------- ORDERS ----------------
@@ -259,60 +312,67 @@ export const api = {
   },
 
   async trackOrder(code: string): Promise<Order> {
+    const cleanCode = code.toUpperCase().trim();
+    // Check Firestore
+    const fromFirestore = await getOrderByTrackingCodeFromFirestore(cleanCode);
+    if (fromFirestore) return fromFirestore;
+
     try {
-      const res = await fetch(`${API_BASE}/orders/track/${encodeURIComponent(code)}`);
+      const res = await fetch(`${API_BASE}/orders/track/${encodeURIComponent(cleanCode)}`);
       if (res.ok) return await res.json();
-      const err = await res.json();
-      throw new Error(err.error || 'Order not found');
-    } catch (e: any) {
-      throw new Error(e.message || `Order #${code} could not be located.`);
-    }
+    } catch (e) {}
+
+    throw new Error(`Order #${cleanCode} could not be located. Please verify your tracking code or contact WhatsApp +254 110 226 322.`);
   },
 
   async createOrder(orderData: any): Promise<Order> {
+    const randomCode = Math.floor(1000 + Math.random() * 9000);
+    const newOrder: Order = {
+      id: `ord-${Date.now().toString().slice(-6)}`,
+      trackingCode: `BRD-${randomCode}`,
+      userId: orderData.userId,
+      customerName: orderData.customerName,
+      email: orderData.email || '',
+      phone: orderData.phone,
+      deliveryAddress: orderData.deliveryAddress,
+      deliveryMethod: orderData.deliveryMethod,
+      paymentMethod: orderData.paymentMethod,
+      paymentStatus: orderData.paymentMethod === 'cod' ? 'pending' : 'paid',
+      mpesaReceipt: orderData.mpesaReceipt || (orderData.paymentMethod === 'mpesa' ? `QK${Math.floor(10000000 + Math.random() * 90000000).toString().slice(0, 8)}M` : undefined),
+      items: orderData.items,
+      subtotal: orderData.subtotal,
+      shippingFee: orderData.shippingFee,
+      discount: orderData.discount,
+      total: orderData.total,
+      status: 'processing',
+      createdAt: new Date().toISOString(),
+      estimatedDelivery: orderData.deliveryMethod === 'upcountry_courier' ? 'In 1-2 Days (Parcel Service)' : 'Today by 6:00 PM (Express Rider)'
+    };
+
+    // Save to Firestore for persistent cloud record
+    await saveOrderToFirestore(newOrder);
+
+    // Also record on server backend
     try {
-      const res = await fetch(`${API_BASE}/orders/create`, {
+      await fetch(`${API_BASE}/orders/create`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(orderData)
+        body: JSON.stringify(newOrder)
       });
-      if (res.ok) return await res.json();
-      const err = await res.json();
-      throw new Error(err.error || 'Failed to create order');
-    } catch (e: any) {
-      const randomCode = Math.floor(1000 + Math.random() * 9000);
-      const fallbackOrder: Order = {
-        id: `ord-${Date.now().toString().slice(-5)}`,
-        trackingCode: `BRD-${randomCode}`,
-        userId: orderData.userId,
-        customerName: orderData.customerName,
-        email: orderData.email || '',
-        phone: orderData.phone,
-        deliveryAddress: orderData.deliveryAddress,
-        deliveryMethod: orderData.deliveryMethod,
-        paymentMethod: orderData.paymentMethod,
-        paymentStatus: orderData.paymentMethod === 'cod' ? 'pending' : 'paid',
-        mpesaReceipt: orderData.mpesaReceipt || (orderData.paymentMethod === 'mpesa' ? `QK${Math.floor(1000000 + Math.random() * 9000000)}M` : undefined),
-        items: orderData.items,
-        subtotal: orderData.subtotal,
-        shippingFee: orderData.shippingFee,
-        discount: orderData.discount,
-        total: orderData.total,
-        status: 'processing',
-        createdAt: new Date().toISOString(),
-        estimatedDelivery: orderData.deliveryMethod === 'upcountry_courier' ? 'In 1-2 Days' : 'Today by 6:00 PM'
-      };
-      return fallbackOrder;
-    }
+    } catch (e) {}
+
+    return newOrder;
   },
 
-  async updateOrderStatus(orderId: string, status: Order['status']): Promise<Order> {
-    const res = await fetch(`${API_BASE}/orders/${orderId}/status`, {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ status })
-    });
-    return await res.json();
+  async updateOrderStatus(orderId: string, status: Order['status']): Promise<void> {
+    await updateOrderStatusInFirestore(orderId, status);
+    try {
+      await fetch(`${API_BASE}/orders/${orderId}/status`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status })
+      });
+    } catch (e) {}
   },
 
   // ---------------- M-PESA PAYMENT SIMULATION ----------------

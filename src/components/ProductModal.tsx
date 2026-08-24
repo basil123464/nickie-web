@@ -3,6 +3,7 @@ import { X, Heart, ShoppingBag, Truck, ShieldCheck, Ruler, MessageCircle, Sparkl
 import { Product } from '../types';
 import { formatKSh, buildWhatsAppProductEnquiry, STORE_CONFIG, CUSTOM_PRINT_FEE } from '../data/products';
 import { SizeGuideModal } from './SizeGuideModal';
+import { handleImageError } from '../utils/imageFallback';
 
 interface ProductModalProps {
   product: Product | null;
@@ -104,6 +105,9 @@ export const ProductModal: React.FC<ProductModalProps> = ({
                 <img
                   src={activeImage || product.image}
                   alt={product.name}
+                  referrerPolicy="no-referrer"
+                  crossOrigin="anonymous"
+                  onError={(e) => handleImageError(e, product.category)}
                   className="w-full h-full object-cover object-center"
                 />
                 <button
@@ -129,7 +133,14 @@ export const ProductModal: React.FC<ProductModalProps> = ({
                         activeImage === img ? 'border-amber-500' : 'border-[#222222] opacity-70 hover:opacity-100'
                       }`}
                     >
-                      <img src={img} alt="" className="w-full h-full object-cover" />
+                      <img
+                        src={img}
+                        alt=""
+                        referrerPolicy="no-referrer"
+                        crossOrigin="anonymous"
+                        onError={(e) => handleImageError(e, product.category)}
+                        className="w-full h-full object-cover"
+                      />
                     </button>
                   ))}
                 </div>

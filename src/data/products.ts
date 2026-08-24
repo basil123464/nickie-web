@@ -44,10 +44,10 @@ export const INITIAL_PRODUCTS: Product[] = [
     sizes: ["S", "M", "L", "XL", "XXL"],
     images: [
       "/images/chelsea.jpeg",
+      "/images/chelsea.jpg",
       "/images/chelsea_team.jpg",
       "/images/chelsea_2627_back.jpg",
-      "/images/chelsea_2627_detail.jpg",
-      "/images/chelsea_2627_angle.jpg"
+      "/images/chelsea_2627_detail.jpg"
     ],
     image: "/images/chelsea.jpeg",
     stock: 50,
@@ -77,7 +77,8 @@ export const INITIAL_PRODUCTS: Product[] = [
     sizes: ["S", "M", "L", "XL", "XXL"],
     images: [
       "/images/manutd.jpeg",
-      "/images/manutd.jpg"
+      "/images/manutd.jpg",
+      "/images/manutd_home.jpg"
     ],
     image: "/images/manutd.jpeg",
     stock: 50,
@@ -107,7 +108,8 @@ export const INITIAL_PRODUCTS: Product[] = [
     sizes: ["S", "M", "L", "XL", "XXL"],
     images: [
       "/images/liverpool.jpeg",
-      "/images/liverpool.jpg"
+      "/images/liverpool.jpg",
+      "/images/liverpool_home.jpg"
     ],
     image: "/images/liverpool.jpeg",
     stock: 40,
@@ -138,7 +140,8 @@ export const INITIAL_PRODUCTS: Product[] = [
     images: [
       "/images/realmadrid.jpeg",
       "/images/realmadrid_team.jpg",
-      "/images/realmadrid.jpg"
+      "/images/realmadrid.jpg",
+      "/images/realmadrid_home.jpg"
     ],
     image: "/images/realmadrid.jpeg",
     stock: 55,
@@ -168,7 +171,8 @@ export const INITIAL_PRODUCTS: Product[] = [
     sizes: ["S", "M", "L", "XL", "XXL"],
     images: [
       "/images/barca.jpeg",
-      "/images/barca.jpg"
+      "/images/barca.jpg",
+      "/images/barca_home.jpg"
     ],
     image: "/images/barca.jpeg",
     stock: 45,
@@ -199,7 +203,8 @@ export const INITIAL_PRODUCTS: Product[] = [
     images: [
       "/images/arsenal.png",
       "/images/arsenal_team.jpg",
-      "/images/arsenal.jpg"
+      "/images/arsenal.jpg",
+      "/images/arsenal_home.jpg"
     ],
     image: "/images/arsenal.png",
     stock: 50,
@@ -228,7 +233,9 @@ export const INITIAL_PRODUCTS: Product[] = [
     ],
     sizes: ["S", "M", "L", "XL", "XXL"],
     images: [
-      "/images/ac_milan.jpg"
+      "/images/ac_milan.jpg",
+      "/images/ac_milan_home.jpg",
+      "/images/retro_heritage.jpg"
     ],
     image: "/images/ac_milan.jpg",
     stock: 35,
@@ -258,7 +265,8 @@ export const INITIAL_PRODUCTS: Product[] = [
     sizes: ["S", "M", "L", "XL", "XXL"],
     images: [
       "/images/intermiami.png",
-      "/images/intermiami.jpg"
+      "/images/intermiami.jpg",
+      "/images/intermiami_home.jpg"
     ],
     image: "/images/intermiami.png",
     stock: 45,
@@ -288,7 +296,8 @@ export const INITIAL_PRODUCTS: Product[] = [
     sizes: ["S", "M", "L", "XL", "XXL"],
     images: [
       "/images/intermilan.jpeg",
-      "/images/intermilan.jpg"
+      "/images/intermilan.jpg",
+      "/images/intermilan_home.jpg"
     ],
     image: "/images/intermilan.jpeg",
     stock: 35,
@@ -318,7 +327,8 @@ export const INITIAL_PRODUCTS: Product[] = [
     sizes: ["S", "M", "L", "XL", "XXL"],
     images: [
       "/images/mancity.jpeg",
-      "/images/mancity.jpg"
+      "/images/mancity.jpg",
+      "/images/mancity_official.jpg"
     ],
     image: "/images/mancity.jpeg",
     stock: 45,
@@ -327,6 +337,38 @@ export const INITIAL_PRODUCTS: Product[] = [
     rating: 5.0,
     reviewsCount: 47,
     tags: ["26/27 Season", "Man City", "Manchester City", "Premier League", "KSh 1500"],
+    allowsCustomPrint: true
+  },
+  {
+    id: 111,
+    name: "France 1998 Zidane #10 Retro Jersey",
+    category: "retro_90s",
+    price: 2500,
+    originalPrice: 2800,
+    desc: "Iconic 1998 World Cup Final Edition: France #10 Zidane retro jersey. Classic royal blue body with red and white tricolor collar and sleeve striping, with custom heat-pressed 'ZIDANE 10' back print.",
+    details: [
+      "Custom bold white heat-pressed 'ZIDANE 10' back print",
+      "Authentic 1998 France World Champion royal blue with tricolor sleeve stripes",
+      "Breathable moisture-wicking micro-mesh jacquard fabric",
+      "Embroidered F.F.F. rooster crest badge",
+      "Price: KSh 2,500 • Available for instant same-day delivery in Nairobi"
+    ],
+    colors: [
+      { name: "French Royal Blue / Tricolor", hex: "#002395" }
+    ],
+    sizes: ["S", "M", "L", "XL", "XXL"],
+    images: [
+      "/images/france_zidane10_retro.jpg",
+      "/images/retro_heritage.jpg",
+      "/images/brazil_ronaldo9_retro.jpg"
+    ],
+    image: "/images/france_zidane10_retro.jpg",
+    stock: 30,
+    featured: true,
+    isNewDrop: true,
+    rating: 5.0,
+    reviewsCount: 44,
+    tags: ["Retro 90s", "Zidane 10", "France 1998", "Custom Print", "World Cup", "Legend Assemble"],
     allowsCustomPrint: true
   },
   {
@@ -380,7 +422,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     sizes: ["S", "M", "L", "XL", "XXL"],
     images: [
       "/images/messi_custom_print_1787335485509.jpg",
-      "https://images.unsplash.com/photo-1518605348400-437b5f43faba?w=800&h=1000&fit=crop&q=80"
+      "/images/brazil_ronaldo9_retro.jpg"
     ],
     image: "/images/messi_custom_print_1787335485509.jpg",
     stock: 25,
@@ -411,7 +453,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     sizes: ["S", "M", "L", "XL", "XXL"],
     images: [
       "/images/ronaldo_custom_print_1787335501119.jpg",
-      "https://images.unsplash.com/photo-1503341504253-dff4815485f1?w=800&h=1000&fit=crop&q=80"
+      "/images/france_zidane10_retro.jpg"
     ],
     image: "/images/ronaldo_custom_print_1787335501119.jpg",
     stock: 20,
@@ -444,10 +486,11 @@ export const INITIAL_PRODUCTS: Product[] = [
     ],
     sizes: ["S", "M", "L", "XL", "XXL"],
     images: [
-      "https://images.unsplash.com/photo-1515523110800-9415d13b84a8?w=800&h=1000&fit=crop&q=80",
-      "/images/messi_custom_print_1787335485509.jpg"
+      "/images/messi_custom_print_1787335485509.jpg",
+      "/images/ronaldo_custom_print_1787335501119.jpg",
+      "/images/brazil_ronaldo9_retro.jpg"
     ],
-    image: "https://images.unsplash.com/photo-1515523110800-9415d13b84a8?w=800&h=1000&fit=crop&q=80",
+    image: "/images/messi_custom_print_1787335485509.jpg",
     stock: 30,
     featured: true,
     isNewDrop: true,
@@ -478,10 +521,11 @@ export const INITIAL_PRODUCTS: Product[] = [
     ],
     sizes: ["S", "M", "L", "XL", "XXL"],
     images: [
-      "https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=800&h=1000&fit=crop&q=80",
-      "https://images.unsplash.com/photo-1578768079052-aa76e52ff62e?w=800&h=1000&fit=crop&q=80"
+      "/images/streetwear_hoodie.jpg",
+      "/images/acid_wash_hoodie.jpg",
+      "/images/cyber_hoodie.jpg"
     ],
-    image: "https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=800&h=1000&fit=crop&q=80",
+    image: "/images/streetwear_hoodie.jpg",
     stock: 14,
     featured: true,
     isNewDrop: false,
@@ -510,10 +554,10 @@ export const INITIAL_PRODUCTS: Product[] = [
     ],
     sizes: ["S", "M", "L", "XL", "XXL"],
     images: [
-      "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=800&h=1000&fit=crop&q=80",
-      "https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=800&h=1000&fit=crop&q=80"
+      "/images/streetwear_tee.jpg",
+      "/images/cyber_jersey.jpg"
     ],
-    image: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=800&h=1000&fit=crop&q=80",
+    image: "/images/streetwear_tee.jpg",
     stock: 28,
     featured: true,
     isNewDrop: false,
@@ -541,9 +585,10 @@ export const INITIAL_PRODUCTS: Product[] = [
     ],
     sizes: ["S", "M", "L", "XL"],
     images: [
-      "https://images.unsplash.com/photo-1518605348400-437b5f43faba?w=800&h=1000&fit=crop&q=80"
+      "/images/retro_heritage.jpg",
+      "/images/france_zidane10_retro.jpg"
     ],
-    image: "https://images.unsplash.com/photo-1518605348400-437b5f43faba?w=800&h=1000&fit=crop&q=80",
+    image: "/images/retro_heritage.jpg",
     stock: 12,
     featured: true,
     isNewDrop: false,
@@ -571,9 +616,10 @@ export const INITIAL_PRODUCTS: Product[] = [
     ],
     sizes: ["S", "M", "L", "XL", "XXL"],
     images: [
-      "https://images.unsplash.com/photo-1503341504253-dff4815485f1?w=800&h=1000&fit=crop&q=80"
+      "/images/cyber_jersey.jpg",
+      "/images/reflector_vest.jpg"
     ],
-    image: "https://images.unsplash.com/photo-1503341504253-dff4815485f1?w=800&h=1000&fit=crop&q=80",
+    image: "/images/cyber_jersey.jpg",
     stock: 11,
     featured: true,
     isNewDrop: true,
@@ -601,9 +647,10 @@ export const INITIAL_PRODUCTS: Product[] = [
     ],
     sizes: ["M", "L", "XL", "XXL"],
     images: [
-      "https://images.unsplash.com/photo-1578768079052-aa76e52ff62e?w=800&h=1000&fit=crop&q=80"
+      "/images/acid_wash_hoodie.jpg",
+      "/images/streetwear_hoodie.jpg"
     ],
-    image: "https://images.unsplash.com/photo-1578768079052-aa76e52ff62e?w=800&h=1000&fit=crop&q=80",
+    image: "/images/acid_wash_hoodie.jpg",
     stock: 6,
     featured: false,
     isNewDrop: true,
@@ -631,9 +678,10 @@ export const INITIAL_PRODUCTS: Product[] = [
     ],
     sizes: ["S", "M", "L", "XL"],
     images: [
-      "https://images.unsplash.com/photo-1517445312882-bc9910d016b7?w=800&h=1000&fit=crop&q=80"
+      "/images/cargo_pants.jpg",
+      "/images/utility_bag.jpg"
     ],
-    image: "https://images.unsplash.com/photo-1517445312882-bc9910d016b7?w=800&h=1000&fit=crop&q=80",
+    image: "/images/cargo_pants.jpg",
     stock: 15,
     featured: false,
     isNewDrop: true,
@@ -661,9 +709,10 @@ export const INITIAL_PRODUCTS: Product[] = [
     ],
     sizes: ["S", "M", "L", "XL"],
     images: [
-      "https://images.unsplash.com/photo-1588850561407-ed78c282e89b?w=800&h=1000&fit=crop&q=80"
+      "/images/snapback_cap.jpg",
+      "/images/dad_cap.jpg"
     ],
-    image: "https://images.unsplash.com/photo-1588850561407-ed78c282e89b?w=800&h=1000&fit=crop&q=80",
+    image: "/images/snapback_cap.jpg",
     stock: 35,
     featured: false,
     isNewDrop: false,
@@ -692,10 +741,10 @@ export const INITIAL_PRODUCTS: Product[] = [
     ],
     sizes: ["S", "M", "L", "XL", "XXL"],
     images: [
-      "https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=800&h=1000&fit=crop&q=80",
-      "https://images.unsplash.com/photo-1578768079052-aa76e52ff62e?w=800&h=1000&fit=crop&q=80"
+      "/images/cyber_hoodie.jpg",
+      "/images/streetwear_hoodie.jpg"
     ],
-    image: "https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=800&h=1000&fit=crop&q=80",
+    image: "/images/cyber_hoodie.jpg",
     stock: 25,
     featured: true,
     isNewDrop: true,
@@ -724,10 +773,10 @@ export const INITIAL_PRODUCTS: Product[] = [
     ],
     sizes: ["M", "L", "XL", "XXL"],
     images: [
-      "https://images.unsplash.com/photo-1503341504253-dff4815485f1?w=800&h=1000&fit=crop&q=80",
-      "https://images.unsplash.com/photo-1515523110800-9415d13b84a8?w=800&h=1000&fit=crop&q=80"
+      "/images/reflector_vest.jpg",
+      "/images/cyber_jersey.jpg"
     ],
-    image: "https://images.unsplash.com/photo-1503341504253-dff4815485f1?w=800&h=1000&fit=crop&q=80",
+    image: "/images/reflector_vest.jpg",
     stock: 40,
     featured: true,
     isNewDrop: true,
@@ -756,10 +805,10 @@ export const INITIAL_PRODUCTS: Product[] = [
     ],
     sizes: ["S", "M", "L", "XL", "XXL"],
     images: [
-      "https://images.unsplash.com/photo-1517445312882-bc9910d016b7?w=800&h=1000&fit=crop&q=80",
-      "https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=800&h=1000&fit=crop&q=80"
+      "/images/windbreaker_jacket.jpg",
+      "/images/cargo_pants.jpg"
     ],
-    image: "https://images.unsplash.com/photo-1517445312882-bc9910d016b7?w=800&h=1000&fit=crop&q=80",
+    image: "/images/windbreaker_jacket.jpg",
     stock: 20,
     featured: false,
     isNewDrop: true,
@@ -789,9 +838,10 @@ export const INITIAL_PRODUCTS: Product[] = [
     ],
     sizes: ["S", "M", "L", "XL"],
     images: [
-      "https://images.unsplash.com/photo-1588850561407-ed78c282e89b?w=800&h=1000&fit=crop&q=80"
+      "/images/dad_cap.jpg",
+      "/images/snapback_cap.jpg"
     ],
-    image: "https://images.unsplash.com/photo-1588850561407-ed78c282e89b?w=800&h=1000&fit=crop&q=80",
+    image: "/images/dad_cap.jpg",
     stock: 30,
     featured: false,
     isNewDrop: false,
@@ -818,9 +868,10 @@ export const INITIAL_PRODUCTS: Product[] = [
     ],
     sizes: ["M", "L"],
     images: [
-      "https://images.unsplash.com/photo-1588850561407-ed78c282e89b?w=800&h=1000&fit=crop&q=80"
+      "/images/bucket_hat.jpg",
+      "/images/snapback_cap.jpg"
     ],
-    image: "https://images.unsplash.com/photo-1588850561407-ed78c282e89b?w=800&h=1000&fit=crop&q=80",
+    image: "/images/bucket_hat.jpg",
     stock: 22,
     featured: false,
     isNewDrop: true,
@@ -849,10 +900,10 @@ export const INITIAL_PRODUCTS: Product[] = [
     ],
     sizes: ["S", "M", "L", "XL", "XXL"],
     images: [
-      "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=800&h=1000&fit=crop&q=80",
-      "https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=800&h=1000&fit=crop&q=80"
+      "/images/streetwear_tee.jpg",
+      "/images/cyber_jersey.jpg"
     ],
-    image: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=800&h=1000&fit=crop&q=80",
+    image: "/images/streetwear_tee.jpg",
     stock: 35,
     featured: false,
     isNewDrop: true,
@@ -880,10 +931,10 @@ export const INITIAL_PRODUCTS: Product[] = [
     ],
     sizes: ["M", "L"],
     images: [
-      "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=800&h=1000&fit=crop&q=80",
-      "https://images.unsplash.com/photo-1577937927133-66ef06acdf18?w=800&h=1000&fit=crop&q=80"
+      "/images/sublimation_mug.jpg",
+      "/images/sublimation_bottle.jpg"
     ],
-    image: "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=800&h=1000&fit=crop&q=80",
+    image: "/images/sublimation_mug.jpg",
     stock: 50,
     featured: true,
     isNewDrop: true,
@@ -913,10 +964,10 @@ export const INITIAL_PRODUCTS: Product[] = [
     ],
     sizes: ["M", "L"],
     images: [
-      "https://images.unsplash.com/photo-1602143407151-7111542de6e8?w=800&h=1000&fit=crop&q=80",
-      "https://images.unsplash.com/photo-1523362628745-0c100150b504?w=800&h=1000&fit=crop&q=80"
+      "/images/sublimation_bottle.jpg",
+      "/images/sublimation_mug.jpg"
     ],
-    image: "https://images.unsplash.com/photo-1602143407151-7111542de6e8?w=800&h=1000&fit=crop&q=80",
+    image: "/images/sublimation_bottle.jpg",
     stock: 45,
     featured: true,
     isNewDrop: true,
@@ -946,10 +997,10 @@ export const INITIAL_PRODUCTS: Product[] = [
     ],
     sizes: ["S", "M", "L", "XL"],
     images: [
-      "https://images.unsplash.com/photo-1572945550746-953e5e407021?w=800&h=1000&fit=crop&q=80",
-      "https://images.unsplash.com/photo-1626785774573-4b799315345d?w=800&h=1000&fit=crop&q=80"
+      "/images/stickers_banners.jpg",
+      "/images/reflector_vest.jpg"
     ],
-    image: "https://images.unsplash.com/photo-1572945550746-953e5e407021?w=800&h=1000&fit=crop&q=80",
+    image: "/images/stickers_banners.jpg",
     stock: 60,
     featured: true,
     isNewDrop: true,

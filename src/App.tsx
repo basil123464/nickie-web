@@ -14,11 +14,11 @@ import { Footer } from './components/Footer';
 import { Product, User } from './types';
 import { INITIAL_PRODUCTS, formatKSh } from './data/products';
 import { api } from './lib/api';
-import { SlidersHorizontal, Sparkles, ShoppingBag } from 'lucide-react';
+import { SlidersHorizontal, Sparkles, ShoppingBag, Zap } from 'lucide-react';
 
 export default function App() {
-  // Products & Filtering state
-  const [products, setProducts] = useState<Product[]>(INITIAL_PRODUCTS);
+  // Master products list initialized immediately with local seeded data for instant 0ms load
+  const [allProducts, setAllProducts] = useState<Product[]>(INITIAL_PRODUCTS);
   const [loadingProducts, setLoadingProducts] = useState(false);
   const [activeCategory, setActiveCategory] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -43,7 +43,7 @@ export default function App() {
         return JSON.parse(saved);
       } catch (e) {}
     }
-    return [INITIAL_PRODUCTS[2]];
+    return [INITIAL_PRODUCTS[2] || INITIAL_PRODUCTS[0]];
   });
 
   // Modals & Drawers
@@ -79,13 +79,81 @@ export default function App() {
     }
   }, [currentUser]);
 
-  // Load products from API
+  // Real-time Firestore Subscription & fast initial load
   useEffect(() => {
-    setLoadingProducts(true);
-    api.getProducts({ category: activeCategory, search: searchQuery, sort: sortBy })
-      .then((data) => setProducts(data))
-      .finally(() => setLoadingProducts(false));
-  }, [activeCategory, searchQuery, sortBy]);
+    let isSubscribed = true;
+
+    // 1. Initial rapid API/Firestore fetch
+    api.getProducts()
+      .then((items) => {
+        if (isSubscribed && items && items.length > 0) {
+          setAllProducts(items);
+        }
+      })
+      .catch((err) => console.warn('Initial product load fallback:', err));
+
+    // 2. Real-time Firestore sync listener
+    const unsubscribe = api.subscribeProducts(
+      (liveItems) => {
+        if (isSubscribed && liveItems && liveItems.length > 0) {
+          setAllProducts(liveItems);
+        }
+      },
+      (err) => console.warn('Live subscription notice:', err)
+    );
+
+    return () => {
+      isSubscribed = false;
+      if (typeof unsubscribe === 'function') unsubscribe();
+    };
+  }, []);
+
+  // Compute filtered & sorted products in memory with 0ms latency
+  const filteredProducts = useMemo(() => {
+    let result = [...allProducts];
+
+    // Filter by Category
+    if (activeCategory && activeCategory !== 'all') {
+      if (activeCategory === 'season_26_27') {
+        result = result.filter(p => p.category === 'season_26_27' || (p.tags && p.tags.some(t => t.toLowerCase().includes('26/27'))));
+      } else if (activeCategory === 'retro_90s') {
+        result = result.filter(p => p.category === 'retro_90s' || (p.tags && p.tags.some(t => t.toLowerCase().includes('retro'))));
+      } else if (activeCategory === 'custom_print') {
+        result = result.filter(p => p.category === 'custom_print' || p.allowsCustomPrint);
+      } else if (activeCategory === 'jersey') {
+        result = result.filter(p => p.category === 'jersey' || p.category === 'season_26_27' || p.category === 'retro_90s' || p.name.toLowerCase().includes('jersey') || p.name.toLowerCase().includes('kit'));
+      } else {
+        result = result.filter(p => p.category === activeCategory);
+      }
+    }
+
+    // Filter by Search Query
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase().trim();
+      result = result.filter(p =>
+        p.name.toLowerCase().includes(q) ||
+        p.desc.toLowerCase().includes(q) ||
+        p.category.toLowerCase().includes(q) ||
+        (p.tags && p.tags.some(t => t.toLowerCase().includes(q)))
+      );
+    }
+
+    // Sort
+    if (sortBy === 'price_asc') {
+      result.sort((a, b) => a.price - b.price);
+    } else if (sortBy === 'price_desc') {
+      result.sort((a, b) => b.price - a.price);
+    } else if (sortBy === 'rating') {
+      result.sort((a, b) => b.rating - a.rating);
+    } else if (sortBy === 'newest') {
+      result.sort((a, b) => (b.isNewDrop ? 1 : 0) - (a.isNewDrop ? 1 : 0));
+    } else {
+      // Default: featured first, then stock availability
+      result.sort((a, b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0));
+    }
+
+    return result;
+  }, [allProducts, activeCategory, searchQuery, sortBy]);
 
   // Wishlist toggle
   const handleToggleWishlist = (product: Product) => {
@@ -221,9 +289,11 @@ export default function App() {
             </h2>
           </div>
 
-          <div className="text-xs text-neutral-400 bg-[#121212] px-3.5 py-1.5 rounded-xl border border-emerald-500/30 flex items-center gap-2">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-            <span>Showing <strong className="text-white">{products.length}</strong> items in Stock (KSh)</span>
+          <div className="flex items-center gap-2">
+            <div className="text-xs text-neutral-300 bg-[#121212] px-3.5 py-1.5 rounded-xl border border-emerald-500/30 flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+              <span>Showing <strong className="text-white">{filteredProducts.length}</strong> items in Stock (KSh)</span>
+            </div>
           </div>
         </div>
 
@@ -237,7 +307,7 @@ export default function App() {
               />
             ))}
           </div>
-        ) : products.length === 0 ? (
+        ) : filteredProducts.length === 0 ? (
           <div className="text-center py-20 bg-[#121212]/60 rounded-3xl border border-[#222222] p-8">
             <ShoppingBag className="w-12 h-12 text-neutral-600 mx-auto mb-3" />
             <h3 className="text-lg font-bold text-white mb-1">No garments found</h3>
@@ -259,7 +329,7 @@ export default function App() {
             id="product-grid"
             className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
           >
-            {products.map((product) => (
+            {filteredProducts.map((product) => (
               <ProductCard
                 key={product.id}
                 product={product}
@@ -334,9 +404,9 @@ export default function App() {
       <AdminModal
         isOpen={adminOpen}
         onClose={() => setAdminOpen(false)}
-        products={products}
+        products={allProducts}
         onProductAdded={(newP) => {
-          setProducts([newP, ...products]);
+          setAllProducts((prev) => [newP, ...prev]);
         }}
         onShowToast={showToast}
       />

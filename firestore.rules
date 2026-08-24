@@ -1,0 +1,27 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Public inventory catalog - ultra fast read access for live store
+    match /products/{productId} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    // Orders collection - allow order placement and tracking lookup
+    match /orders/{orderId} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    // Reviews - customer ratings & feedback
+    match /reviews/{reviewId} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    // User accounts
+    match /users/{userId} {
+      allow read, write: if true;
+    }
+  }
+}

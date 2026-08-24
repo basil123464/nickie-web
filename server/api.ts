@@ -1,4 +1,6 @@
 import express, { Request, Response, Router } from 'express';
+import fs from 'fs';
+import path from 'path';
 import { INITIAL_PRODUCTS, INITIAL_REVIEWS, PROMO_CODES } from '../src/data/products';
 import { Product, Review, Order, User } from '../src/types';
 
@@ -90,7 +92,7 @@ let orders: Order[] = [
         quantity: 1,
         customName: "MESSI",
         customNumber: "10",
-        image: "https://images.unsplash.com/photo-1518605348400-437b5f43faba?w=800&h=1000&fit=crop&q=80"
+        image: "/images/messi_custom_print_1787335485509.jpg"
       }
     ],
     subtotal: 2500,
@@ -108,6 +110,50 @@ function sanitizeUser(user: User & { passwordHash?: string }): User {
   const { passwordHash, ...rest } = user;
   return rest;
 }
+
+// ----------------- STATIC IMAGE SERVING & FALLBACK -----------------
+apiRouter.get('/images/:imageName', (req: Request, res: Response) => {
+  const imageName = path.basename(req.params.imageName);
+  const possiblePaths = [
+    path.join(process.cwd(), 'public', 'images', imageName),
+    path.join(process.cwd(), 'dist', 'images', imageName),
+    path.join(process.cwd(), 'src', 'assets', 'images', imageName),
+    path.join(__dirname, '..', 'public', 'images', imageName),
+    path.join(__dirname, '..', 'dist', 'images', imageName),
+    path.join(__dirname, '..', 'src', 'assets', 'images', imageName)
+  ];
+
+  for (const filePath of possiblePaths) {
+    if (fs.existsSync(filePath)) {
+      const ext = path.extname(filePath).toLowerCase();
+      const mimeTypes: Record<string, string> = {
+        '.jpg': 'image/jpeg',
+        '.jpeg': 'image/jpeg',
+        '.png': 'image/png',
+        '.webp': 'image/webp',
+        '.svg': 'image/svg+xml',
+        '.gif': 'image/gif',
+      };
+      res.setHeader('Content-Type', mimeTypes[ext] || 'image/jpeg');
+      res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+      res.setHeader('Access-Control-Allow-Origin', '*');
+      res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin');
+      return res.sendFile(filePath);
+    }
+  }
+
+  // Fallback to default kit image
+  const fallback = path.join(process.cwd(), 'public', 'images', 'chelsea.jpeg');
+  if (fs.existsSync(fallback)) {
+    res.setHeader('Content-Type', 'image/jpeg');
+    res.setHeader('Cache-Control', 'public, max-age=86400');
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin');
+    return res.sendFile(fallback);
+  }
+
+  res.status(404).json({ error: 'Image not found' });
+});
 
 // ----------------- HEALTH -----------------
 apiRouter.get('/health', (req: Request, res: Response) => {

@@ -1,0 +1,83 @@
+{
+  "entities": {
+    "products": {
+      "title": "Product",
+      "description": "Store items including kits, hoodies, custom prints, sublimation, stickers and gear",
+      "type": "object",
+      "properties": {
+        "id": { "type": "number", "description": "Numeric or string ID" },
+        "name": { "type": "string", "description": "Product title" },
+        "category": { "type": "string", "description": "Category slug" },
+        "price": { "type": "number", "description": "Price in KES" },
+        "originalPrice": { "type": "number", "description": "Original price before discount" },
+        "desc": { "type": "string", "description": "Product details and description" },
+        "colors": { "type": "array", "description": "Available color variants" },
+        "sizes": { "type": "array", "description": "Available sizes" },
+        "image": { "type": "string", "description": "Primary preview image URL" },
+        "images": { "type": "array", "description": "Full image gallery URLs" },
+        "stock": { "type": "number", "description": "Stock count" },
+        "featured": { "type": "boolean", "description": "Featured in hero or showcase" },
+        "isNewDrop": { "type": "boolean", "description": "New season drop badge" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["name", "price", "category", "image"]
+    },
+    "orders": {
+      "title": "Order",
+      "description": "Customer orders with tracking code, M-Pesa details, items, and address",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "trackingCode": { "type": "string" },
+        "userId": { "type": "string" },
+        "customerName": { "type": "string" },
+        "email": { "type": "string" },
+        "phone": { "type": "string" },
+        "deliveryAddress": { "type": "object" },
+        "deliveryMethod": { "type": "string" },
+        "paymentMethod": { "type": "string" },
+        "paymentStatus": { "type": "string" },
+        "mpesaReceipt": { "type": "string" },
+        "items": { "type": "array" },
+        "subtotal": { "type": "number" },
+        "shippingFee": { "type": "number" },
+        "discount": { "type": "number" },
+        "total": { "type": "number" },
+        "status": { "type": "string" },
+        "createdAt": { "type": "string" },
+        "estimatedDelivery": { "type": "string" }
+      },
+      "required": ["trackingCode", "customerName", "phone", "items", "total"]
+    },
+    "reviews": {
+      "title": "Review",
+      "description": "Customer ratings and testimonials",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "productId": { "type": "number" },
+        "author": { "type": "string" },
+        "rating": { "type": "number" },
+        "comment": { "type": "string" },
+        "date": { "type": "string" },
+        "verified": { "type": "boolean" }
+      },
+      "required": ["productId", "author", "rating", "comment"]
+    },
+    "users": {
+      "title": "User",
+      "description": "Registered shoppers and admins",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "email": { "type": "string" },
+        "phone": { "type": "string" },
+        "role": { "type": "string" },
+        "address": { "type": "object" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["name", "email"]
+    }
+  }
+}

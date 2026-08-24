@@ -2,6 +2,7 @@ import React from 'react';
 import { X, Heart, MessageCircle, Trash2, ArrowRight } from 'lucide-react';
 import { Product } from '../types';
 import { formatKSh, buildWhatsAppProductEnquiry } from '../data/products';
+import { handleImageError } from '../utils/imageFallback';
 
 interface WishlistDrawerProps {
   isOpen: boolean;
@@ -67,7 +68,14 @@ export const WishlistDrawer: React.FC<WishlistDrawerProps> = ({
                   className="bg-[#121212] border border-[#222222] rounded-xl p-3 flex gap-3 relative group hover:border-neutral-700 transition"
                 >
                   <div className="w-20 h-24 rounded-lg bg-[#0A0A0A] overflow-hidden shrink-0 border border-[#222222]">
-                    <img src={prod.image} alt={prod.name} className="w-full h-full object-cover" />
+                    <img
+                      src={prod.image}
+                      alt={prod.name}
+                      referrerPolicy="no-referrer"
+                      crossOrigin="anonymous"
+                      onError={(e) => handleImageError(e, prod.category)}
+                      className="w-full h-full object-cover"
+                    />
                   </div>
 
                   <div className="flex-1 flex flex-col justify-between">

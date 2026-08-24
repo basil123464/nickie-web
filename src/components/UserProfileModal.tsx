@@ -3,6 +3,7 @@ import { X, User as UserIcon, Package, MapPin, Phone, LogOut, Check, Clock, Chev
 import { User, Order } from '../types';
 import { formatKSh } from '../data/products';
 import { api } from '../lib/api';
+import { handleImageError } from '../utils/imageFallback';
 
 interface UserProfileModalProps {
   isOpen: boolean;
@@ -160,7 +161,14 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                     {ord.items.map((it, idx) => (
                       <div key={idx} className="flex items-center justify-between text-xs text-neutral-300">
                         <div className="flex items-center gap-2">
-                          <img src={it.image} alt="" className="w-8 h-10 rounded object-cover border border-[#222222]" />
+                          <img
+                            src={it.image}
+                            alt=""
+                            referrerPolicy="no-referrer"
+                            crossOrigin="anonymous"
+                            onError={(e) => handleImageError(e)}
+                            className="w-8 h-10 rounded object-cover border border-[#222222]"
+                          />
                           <div>
                             <p className="font-bold text-white leading-tight">{it.name}</p>
                             <p className="text-[11px] text-neutral-500">{it.color} • Size {it.size} (x{it.quantity})</p>

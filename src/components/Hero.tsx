@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { ArrowRight, Sparkles, Shield, Zap, MessageCircle } from 'lucide-react';
 import { STORE_CONFIG } from '../data/products';
+import { handleImageError } from '../utils/imageFallback';
 
 interface HeroProps {
   onExploreClick: () => void;
@@ -162,6 +163,9 @@ export const Hero: React.FC<HeroProps> = ({ onExploreClick, onFilterCategory }) 
                 <img
                   src={activeDrop.image}
                   alt={activeDrop.title}
+                  referrerPolicy="no-referrer"
+                  crossOrigin="anonymous"
+                  onError={(e) => handleImageError(e, 'season_26_27')}
                   className="w-full h-full object-cover object-center group-hover:scale-105 transition duration-700"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0A] via-[#0A0A0A]/20 to-transparent" />
