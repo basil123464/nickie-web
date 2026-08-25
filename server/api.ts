@@ -7,6 +7,12 @@ import { Product, Review, Order, User } from '../src/types';
 export const apiRouter = Router();
 apiRouter.use(express.json());
 
+// Serve static images directly through API router for backend visibility
+const publicImagesPath = path.resolve(process.cwd(), 'public', 'images');
+const assetsImagesPath = path.resolve(process.cwd(), 'src', 'assets', 'images');
+apiRouter.use('/images', express.static(publicImagesPath));
+apiRouter.use('/images', express.static(assetsImagesPath));
+
 // Ensure query params and body are always safely parsed in both Express and Vite Connect middleware
 apiRouter.use((req: Request, _res: Response, next) => {
   if (!req.query) {

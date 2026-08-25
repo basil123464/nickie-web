@@ -72,7 +72,6 @@ export const WishlistDrawer: React.FC<WishlistDrawerProps> = ({
                       src={prod.image}
                       alt={prod.name}
                       referrerPolicy="no-referrer"
-                      crossOrigin="anonymous"
                       onError={(e) => handleImageError(e, prod.category)}
                       className="w-full h-full object-cover"
                     />

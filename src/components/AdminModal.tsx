@@ -291,7 +291,6 @@ export const AdminModal: React.FC<AdminModalProps> = ({
                     src={p.image}
                     alt=""
                     referrerPolicy="no-referrer"
-                    crossOrigin="anonymous"
                     onError={(e) => handleImageError(e, p.category)}
                     className="w-16 h-20 rounded-lg object-cover bg-[#121212] shrink-0 border border-[#222222]"
                   />

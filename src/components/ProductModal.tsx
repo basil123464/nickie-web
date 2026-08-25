@@ -106,7 +106,6 @@ export const ProductModal: React.FC<ProductModalProps> = ({
                   src={activeImage || product.image}
                   alt={product.name}
                   referrerPolicy="no-referrer"
-                  crossOrigin="anonymous"
                   onError={(e) => handleImageError(e, product.category)}
                   className="w-full h-full object-cover object-center"
                 />
@@ -137,7 +136,6 @@ export const ProductModal: React.FC<ProductModalProps> = ({
                         src={img}
                         alt=""
                         referrerPolicy="no-referrer"
-                        crossOrigin="anonymous"
                         onError={(e) => handleImageError(e, product.category)}
                         className="w-full h-full object-cover"
                       />

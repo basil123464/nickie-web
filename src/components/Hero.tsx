@@ -164,7 +164,6 @@ export const Hero: React.FC<HeroProps> = ({ onExploreClick, onFilterCategory }) 
                   src={activeDrop.image}
                   alt={activeDrop.title}
                   referrerPolicy="no-referrer"
-                  crossOrigin="anonymous"
                   onError={(e) => handleImageError(e, 'season_26_27')}
                   className="w-full h-full object-cover object-center group-hover:scale-105 transition duration-700"
                 />

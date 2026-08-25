@@ -165,7 +165,6 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                             src={it.image}
                             alt=""
                             referrerPolicy="no-referrer"
-                            crossOrigin="anonymous"
                             onError={(e) => handleImageError(e)}
                             className="w-8 h-10 rounded object-cover border border-[#222222]"
                           />

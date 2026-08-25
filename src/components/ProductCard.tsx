@@ -43,7 +43,6 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           alt={product.name}
           loading="lazy"
           referrerPolicy="no-referrer"
-          crossOrigin="anonymous"
           onError={(e) => handleImageError(e, product.category)}
           className="w-full h-full object-cover object-center group-hover:scale-105 transition duration-500"
         />

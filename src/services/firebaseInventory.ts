@@ -26,29 +26,56 @@ let isSeeding = false;
 let hasSeeded = false;
 
 /**
- * Ensures initial catalog products are seeded into Firestore if the collection is empty.
+ * Ensures all catalog products and pictures are synced into Firestore with high-res images and multi-angle galleries.
  */
-export async function seedProductsIfEmpty(): Promise<void> {
-  if (hasSeeded || isSeeding) return;
+export async function seedProductsIfEmpty(forceSync = false): Promise<void> {
+  if ((hasSeeded && !forceSync) || isSeeding) return;
   isSeeding = true;
 
   try {
     const productsRef = collection(db, PRODUCTS_COLLECTION);
     const snapshot = await getDocs(productsRef);
 
-    if (snapshot.empty) {
-      console.log('⚡ Initializing & Seeding catalog into Firebase Firestore...');
-      // Batch write initial products
+    if (snapshot.empty || forceSync) {
+      console.log('⚡ Syncing full picture catalog & inventory into Firebase Firestore...');
       const batch = writeBatch(db);
       for (const product of INITIAL_PRODUCTS) {
         const prodDoc = doc(db, PRODUCTS_COLLECTION, String(product.id));
         batch.set(prodDoc, {
           ...product,
+          image: product.image,
+          images: product.images && product.images.length > 0 ? product.images : [product.image],
           updatedAt: new Date().toISOString()
-        });
+        }, { merge: true });
       }
       await batch.commit();
-      console.log('✅ Successfully seeded all products to Firestore!');
+      console.log(`✅ Successfully synced ${INITIAL_PRODUCTS.length} products with pictures to Firestore!`);
+    } else {
+      // Reconcile missing images or new products in Firestore
+      const existingDocIds = new Set<string>();
+      snapshot.forEach(docSnap => existingDocIds.add(docSnap.id));
+
+      const batch = writeBatch(db);
+      let needsCommit = false;
+
+      for (const product of INITIAL_PRODUCTS) {
+        const idStr = String(product.id);
+        if (!existingDocIds.has(idStr)) {
+          const prodDoc = doc(db, PRODUCTS_COLLECTION, idStr);
+          batch.set(prodDoc, {
+            ...product,
+            image: product.image,
+            images: product.images && product.images.length > 0 ? product.images : [product.image],
+            updatedAt: new Date().toISOString()
+          });
+          needsCommit = true;
+        }
+      }
+
+      if (needsCommit) {
+        await batch.commit();
+        console.log('✅ Reconciled missing products into Firestore!');
+      }
     }
     hasSeeded = true;
   } catch (error) {
@@ -66,7 +93,7 @@ export function subscribeToProducts(
   onProductsUpdate: (products: Product[]) => void,
   onError?: (err: any) => void
 ): Unsubscribe {
-  // Trigger seeding in background
+  // Trigger seeding & sync in background
   seedProductsIfEmpty();
 
   const productsRef = collection(db, PRODUCTS_COLLECTION);
@@ -77,24 +104,29 @@ export function subscribeToProducts(
         const items: Product[] = [];
         snapshot.forEach((docSnap) => {
           const data = docSnap.data();
+          // Find matching initial product for gallery fallback if needed
+          const localMatch = INITIAL_PRODUCTS.find(p => String(p.id) === String(data.id || docSnap.id));
+          const primaryImage = data.image || localMatch?.image || '/images/chelsea.jpeg';
+          const galleryImages = (data.images && data.images.length > 0) ? data.images : (localMatch?.images || [primaryImage]);
+
           items.push({
             id: Number(data.id) || docSnap.id,
-            name: data.name,
-            category: data.category,
-            price: Number(data.price),
-            originalPrice: data.originalPrice ? Number(data.originalPrice) : undefined,
-            desc: data.desc,
-            details: data.details || [],
-            colors: data.colors || [{ name: 'Default', hex: '#000000' }],
-            sizes: data.sizes || ['S', 'M', 'L', 'XL'],
-            images: data.images && data.images.length > 0 ? data.images : [data.image],
-            image: data.image,
-            stock: Number(data.stock ?? 10),
-            rating: Number(data.rating ?? 5.0),
-            reviewsCount: Number(data.reviewsCount ?? 0),
-            featured: Boolean(data.featured),
-            isNewDrop: Boolean(data.isNewDrop),
-            tags: data.tags || []
+            name: data.name || localMatch?.name || 'Garment Drop',
+            category: data.category || localMatch?.category || 'season_26_27',
+            price: Number(data.price || localMatch?.price || 1500),
+            originalPrice: data.originalPrice ? Number(data.originalPrice) : localMatch?.originalPrice,
+            desc: data.desc || localMatch?.desc || '',
+            details: data.details || localMatch?.details || [],
+            colors: data.colors || localMatch?.colors || [{ name: 'Default', hex: '#000000' }],
+            sizes: data.sizes || localMatch?.sizes || ['S', 'M', 'L', 'XL'],
+            images: galleryImages,
+            image: primaryImage,
+            stock: Number(data.stock ?? localMatch?.stock ?? 10),
+            rating: Number(data.rating ?? localMatch?.rating ?? 5.0),
+            reviewsCount: Number(data.reviewsCount ?? localMatch?.reviewsCount ?? 0),
+            featured: Boolean(data.featured ?? localMatch?.featured),
+            isNewDrop: Boolean(data.isNewDrop ?? localMatch?.isNewDrop),
+            tags: data.tags || localMatch?.tags || []
           } as Product);
         });
         onProductsUpdate(items);
@@ -127,24 +159,28 @@ export async function getProductsFromFirestore(): Promise<Product[]> {
     const items: Product[] = [];
     snapshot.forEach((docSnap) => {
       const data = docSnap.data();
+      const localMatch = INITIAL_PRODUCTS.find(p => String(p.id) === String(data.id || docSnap.id));
+      const primaryImage = data.image || localMatch?.image || '/images/chelsea.jpeg';
+      const galleryImages = (data.images && data.images.length > 0) ? data.images : (localMatch?.images || [primaryImage]);
+
       items.push({
         id: Number(data.id) || docSnap.id,
-        name: data.name,
-        category: data.category,
-        price: Number(data.price),
-        originalPrice: data.originalPrice ? Number(data.originalPrice) : undefined,
-        desc: data.desc,
-        details: data.details || [],
-        colors: data.colors || [{ name: 'Default', hex: '#000000' }],
-        sizes: data.sizes || ['S', 'M', 'L', 'XL'],
-        images: data.images && data.images.length > 0 ? data.images : [data.image],
-        image: data.image,
-        stock: Number(data.stock ?? 10),
-        rating: Number(data.rating ?? 5.0),
-        reviewsCount: Number(data.reviewsCount ?? 0),
-        featured: Boolean(data.featured),
-        isNewDrop: Boolean(data.isNewDrop),
-        tags: data.tags || []
+        name: data.name || localMatch?.name || 'Garment Drop',
+        category: data.category || localMatch?.category || 'season_26_27',
+        price: Number(data.price || localMatch?.price || 1500),
+        originalPrice: data.originalPrice ? Number(data.originalPrice) : localMatch?.originalPrice,
+        desc: data.desc || localMatch?.desc || '',
+        details: data.details || localMatch?.details || [],
+        colors: data.colors || localMatch?.colors || [{ name: 'Default', hex: '#000000' }],
+        sizes: data.sizes || localMatch?.sizes || ['S', 'M', 'L', 'XL'],
+        images: galleryImages,
+        image: primaryImage,
+        stock: Number(data.stock ?? localMatch?.stock ?? 10),
+        rating: Number(data.rating ?? localMatch?.rating ?? 5.0),
+        reviewsCount: Number(data.reviewsCount ?? localMatch?.reviewsCount ?? 0),
+        featured: Boolean(data.featured ?? localMatch?.featured),
+        isNewDrop: Boolean(data.isNewDrop ?? localMatch?.isNewDrop),
+        tags: data.tags || localMatch?.tags || []
       } as Product);
     });
 
@@ -163,6 +199,8 @@ export async function saveProductToFirestore(product: Product): Promise<Product>
     const prodDoc = doc(db, PRODUCTS_COLLECTION, String(product.id));
     await setDoc(prodDoc, {
       ...product,
+      image: product.image,
+      images: product.images && product.images.length > 0 ? product.images : [product.image],
       updatedAt: new Date().toISOString()
     }, { merge: true });
     return product;
